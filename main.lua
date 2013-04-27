@@ -19,7 +19,7 @@ function Tile:draw()
   -- Be a good citizen and pop the graphics back to their proper
   -- colours when we're done.
   local mousex, mousey = love.mouse.getPosition()
-  if self:is_inside(mousex, mousey) then
+  if self:is_inside(mousex, mousey) and self:is_legal_move() then
     local oldr, oldg, oldb, olda = love.graphics.getColor()
 
     love.graphics.setColor(255, 255, 255)
@@ -39,6 +39,22 @@ end
 function Tile:is_inside(x, y)
   return(x >= (self.x + 1) and x <= (self.x + (self.sx - 1)) and
     y >= (self.y + 1) and y <= (self.y + (self.sy - 1)))
+end
+
+function Tile:is_legal_move()
+  -- Does not allow diagonal motion. Might want to change that soon.
+  -- Also does not allow backwards motion. (west)
+  if self.x == (playertile.x + 32) and self.y == playertile.y then
+    return true
+  end
+
+  if self.y == (playertile.y + 32) and self.x == playertile.x then
+    return true
+  end
+
+  if self.y == (playertile.y - 32) and self.x == playertile.x then
+    return true
+  end
 end
 
 
