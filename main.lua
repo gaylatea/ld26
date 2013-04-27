@@ -7,13 +7,14 @@ require("AnAL")
 playertile = nil
 
 -- Handle processing for each of the game tiles.
-Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32, costValue = 1}
+Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32, costValue = 1, visible = false}
 Tile_mt = { __index = Tile }
 function Tile:new(x, y, sx, sy)
   sx = sx or 32
   sy = sy or 32
   costValue = math.random(5)
-  return setmetatable( {x=x, y=y, sx=sx, sy=sy, costValue=costValue}, Tile_mt)
+  visible = visible or false
+  return setmetatable( {x=x, y=y, sx=sx, sy=sy, costValue=costValue, visible=visible}, Tile_mt)
 end
 
 function Tile:draw()
@@ -29,15 +30,38 @@ function Tile:draw()
     love.graphics.line(self.x, self.y, self.x, (self.y+self.sy))
     love.graphics.line((self.x+self.sx), self.y, (self.x+self.sx), (self.y+self.sy))
     love.graphics.line(self.x, (self.y+self.sy), (self.x+self.sx), (self.y+self.sy))
-
-    love.graphics.print(self.costValue, self.x, self.y)
-
     love.graphics.setColor(oldr, oldg, oldb, olsa)
   end
 
+  --Check to see if the the tile is within range of the player, if so then make the cost value visible
+  if (self.x == playertile.x and self.y == playertile.y)
+    or (self.x == playertile.x+32 and self.y == playertile.y+32)
+    or (self.x == playertile.x-32 and self.y == playertile.y-32)
+    or (self.x == playertile.x+32 and self.y == playertile.y-32)
+    or (self.x == playertile.x-32 and self.y == playertile.y+32)
+    or (self.x == playertile.x+32 and self.y == playertile.y)
+    or (self.x == playertile.x+64 and self.y == playertile.y)
+    or (self.x == playertile.x and self.y == playertile.y+32)
+    or (self.x == playertile.x and self.y == playertile.y+64)
+    or (self.x == playertile.x-32 and self.y == playertile.y)
+    or (self.x == playertile.x-64 and self.y == playertile.y)
+    or (self.x == playertile.x and self.y == playertile.y-32)
+    or (self.x == playertile.x and self.y == playertile.y-64)
+  then 
+  self.visible = true
+  end
+
+  --Only draw the tiles value if it is set to visible
+  if self.visible == true then
+    love.graphics.print(self.costValue, self.x, self.y)
+  end
+
+
+  --draw the animation of the player
   if playertile == self then
     anim:draw(self.x, self.y)
   end
+
 end
 
 function Tile:is_inside(x, y)
