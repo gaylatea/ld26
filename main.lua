@@ -67,6 +67,7 @@ function Tile:draw()
     if (self.x == player.tile.x and self.y == player.tile.y-32)
       or (self.x == player.tile.x and self.y == player.tile.y+32)
       or (self.x == player.tile.x+32 and self.y == player.tile.y)
+      or (self.x == player.tile.x-32 and self.y == player.tile.y)
       then
         love.graphics.setColor(255, 255, 255)
       else
