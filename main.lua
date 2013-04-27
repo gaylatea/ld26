@@ -60,7 +60,7 @@ function Tile:draw()
       else
         love.graphics.setColor(self.red, self.blue, self.green)
     end
-  love.graphics.print(self.costValue, self.x, self.y)
+  love.graphics.print(self.costValue, self.x+13, self.y+9)
   love.graphics.setColor(255, 255, 255)
   end
 
