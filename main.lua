@@ -147,7 +147,6 @@ function reset()
     row = row + 1
   until row == 15
 
-  player.tile   = tiles[8][1]
   -- Give the player less energy per level, so they have to try and
   -- conserve their resources.
   newEnergy = (100 - ((currentLevel - 1) * 25))
@@ -189,6 +188,7 @@ function love.load()
   spaceBackground = love.graphics.newImage("spacebg.png")
 
   reset()
+  player.tile   = tiles[8][1]
 
 end
 
