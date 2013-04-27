@@ -87,6 +87,7 @@ function Tile:draw()
   if player.tile == self then
     if playDeath then
       if animations.death:getCurrentFrame() == 7 then
+        currentLevel = 1
         reset()
       end
       animations.death:draw(self.x, self.y)
@@ -147,7 +148,14 @@ function reset()
   until row == 15
 
   player.tile   = tiles[8][1]
-  player.energy = 100 + player.energy
+  -- Give the player less energy per level, so they have to try and
+  -- conserve their resources.
+  newEnergy = (100 - ((currentLevel - 1) * 25))
+  if newEnergy < 25 then
+    newEnergy = 25
+  end
+
+  player.energy = newEnergy + player.energy
   playDeath = false
   animations.death:seek(1)
 
