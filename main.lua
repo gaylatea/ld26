@@ -36,7 +36,15 @@ function Tile:draw()
   end
 
   if player.tile == self then
-    anim:draw(self.x, self.y)
+    if player.energy >= 76 then
+      animations.good:draw(self.x, self.y)
+    elseif player.energy >= 51 then
+      animations.okay:draw(self.x, self.y)
+    elseif player.energy >= 26 then
+      animations.bad:draw(self.x, self.y)
+    else
+      animations.dying:draw(self.x, self.y)
+    end
   end
 end
 
@@ -81,13 +89,28 @@ function love.load()
 
   player.tile = tiles[8][1]
 
-  local image = love.graphics.newImage('ball1.png')
-  anim = newAnimation(image, 32, 32, 0.13, 0)
+  local images = {
+    good  = love.graphics.newImage("ball1.png"),
+    okay  = love.graphics.newImage("ball75.png"),
+    bad   = love.graphics.newImage("ball50.png"),
+    dying = love.graphics.newImage("ball25.png"),
+  }
+
+  animations = {
+    good  = newAnimation(images.good, 32, 32, 0.13, 0),
+    okay  = newAnimation(images.okay, 32, 32, 0.13, 0),
+    bad   = newAnimation(images.bad, 32, 32, 0.13, 0),
+    dying = newAnimation(images.dying, 32, 32, 0.13, 0),
+  }
+
 end
 
 function love.update(dt)
-   -- Updates the animation. (Enables frame changes)
-   anim:update(dt)
+  -- Updates the animation. (Enables frame changes)
+  animations.good:update(dt)
+  animations.okay:update(dt)
+  animations.bad:update(dt)
+  animations.dying:update(dt)
 end
 
 function love.draw()
