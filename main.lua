@@ -4,24 +4,36 @@
 require("AnAL")
 
 -- Stats about the player.
-player    = {tile=nil, energy=100, animation=nil}
-playDeath = false
+player        = {tile=nil, energy=0, animation=nil}
+playDeath     = false
+currentLevel  = 1
+targetTile    = nil
 
 -- Handle processing for each of the game tiles.
 Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32, costValue = 1, visible = false, red=90, green=90, blue=90}
 Tile_mt = { __index = Tile }
-function Tile:new(x, y, sx, sy)
-  sx = sx or 32
-  sy = sy or 32
+function Tile:new(x, y, gx, gy)
   costValue = math.random(5)
   visible = visible or false
   red = red or 90
   green = green or 90
   blue = blue or 90
-  return setmetatable( {x=x, y=y, sx=sx, sy=sy, costValue=costValue, visible=visible, red=red, green=green, blue=blue}, Tile_mt)
+  return setmetatable( {x=x, y=y, gx=gx, gy=gy, costValue=costValue, visible=visible, red=red, green=green, blue=blue}, Tile_mt)
 end
 
 function Tile:draw()
+  -- Draw the target tile in red so we know what's up.
+  if targetTile == self then
+    local oldr, oldg, oldb, olda = love.graphics.getColor()
+
+    love.graphics.setColor(255, 0, 0)
+    love.graphics.line(self.x, self.y, (self.x+self.sx), self.y)
+    love.graphics.line(self.x, self.y, self.x, (self.y+self.sy))
+    love.graphics.line((self.x+self.sx), self.y, (self.x+self.sx), (self.y+self.sy))
+    love.graphics.line(self.x, (self.y+self.sy), (self.x+self.sx), (self.y+self.sy))
+    love.graphics.setColor(oldr, oldg, oldb, olda)
+  end
+
   -- Be a good citizen and pop the graphics back to their proper
   -- colours when we're done.
   local mousex, mousey = love.mouse.getPosition()
@@ -55,6 +67,7 @@ function Tile:draw()
     if (self.x == player.tile.x and self.y == player.tile.y-32)
       or (self.x == player.tile.x and self.y == player.tile.y+32)
       or (self.x == player.tile.x+32 and self.y == player.tile.y)
+      or (self.x == player.tile.x-32 and self.y == player.tile.y)
       then
         love.graphics.setColor(255, 255, 255)
       else
@@ -75,6 +88,7 @@ function Tile:draw()
   if player.tile == self then
     if playDeath then
       if animations.death:getCurrentFrame() == 7 then
+        currentLevel = 1
         reset()
       end
       animations.death:draw(self.x, self.y)
@@ -105,6 +119,10 @@ function Tile:is_legal_move()
     return true
   end
 
+  if self.x == (player.tile.x - 32) and self.y == player.tile.y then
+    return true
+  end
+
   if self.y == (player.tile.y + 32) and self.x == player.tile.x then
     return true
   end
@@ -123,17 +141,31 @@ function reset()
     local rowtable = {}
     repeat
       local x = (column * 32) + 100
-      table.insert(rowtable, Tile:new(x, y))
+      table.insert(rowtable, Tile:new(x, y, column, row))
       column = column + 1
     until column == 32
     table.insert(tiles, rowtable)
     row = row + 1
   until row == 15
 
-  player.tile   = tiles[8][1]
-  player.energy = 100
-  playDeath = False
+  -- Give the player less energy per level, so they have to try and
+  -- conserve their resources.
+  newEnergy = (100 - ((currentLevel - 1) * 25))
+  if newEnergy < 25 then
+    newEnergy = 25
+  end
+
+  player.energy = newEnergy + player.energy
+  playDeath = false
   animations.death:seek(1)
+
+  -- Randomize where the target tile is, but try to keep it at least
+  -- certain distance away from the player.
+  local randomRow     = math.random(15)
+  local randomColumn  = math.random(32)
+
+  targetTile = tiles[randomRow][randomColumn]
+  targetTile.costValue = 0
 end
 
 function love.load()
@@ -157,6 +189,7 @@ function love.load()
   spaceBackground = love.graphics.newImage("spacebg.png")
 
   reset()
+  player.tile   = tiles[8][1]
 
 end
 
@@ -188,6 +221,10 @@ function love.mousepressed(x, y, button)
     for row, v in ipairs(tiles) do
       for column, tile in ipairs(v) do
         if tile:is_inside(x, y) and tile:is_legal_move() then
+          if tile == targetTile then
+            currentLevel = currentLevel + 1
+            reset()
+          end
           player.tile.visible = true
           player.tile = tiles[row][column]
           if player.tile.costValue >= player.energy then
