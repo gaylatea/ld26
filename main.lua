@@ -140,6 +140,8 @@ function love.load()
     death = newAnimation(images.death, 32, 32, 0.13, 0),
   }
 
+  spaceBackground = love.graphics.newImage("spacebg.png")
+
 end
 
 function love.update(dt)
@@ -156,6 +158,7 @@ end
 
 function love.draw()
   -- Draw the grid system.
+  love.graphics.draw(spaceBackground, 0, 0)
   love.graphics.setColor(255, 255, 255)
   love.graphics.print("Path. Use the mouse to navigate.", 100, 50)
   love.graphics.print("Current Energy: " .. player.energy, 100, 65)
