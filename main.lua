@@ -9,7 +9,7 @@ playDeath = false
 
 -- Handle processing for each of the game tiles.
 Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32, 
-        costValue = 1, visible = false, t_path = false,
+        costValue = 1, visible = false,
         red=90, green=90, blue=90}
 Tile_mt = { __index = Tile }
 function Tile:new(x, y, sx, sy)
@@ -17,7 +17,6 @@ function Tile:new(x, y, sx, sy)
   sy = sy or 32
   costValue = math.random(5)
   visible = visible or false
-  t_path = t_path or false
   red = red or 90
   green = green or 90
   blue = blue or 90
@@ -41,8 +40,10 @@ function Tile:draw()
     love.graphics.setColor(oldr, oldg, oldb, olsa)
   end
 
+  if self:is_inside(mousex, mousey)
+    then
   --Check to see if the the tile is within range of the player, if so then make the cost value visible
-  if (self.x == player.tile.x and self.y == player.tile.y)
+    if (self.x == player.tile.x and self.y == player.tile.y)
     or (self.x == player.tile.x+32 and self.y == player.tile.y+32)
     or (self.x == player.tile.x-32 and self.y == player.tile.y-32)
     or (self.x == player.tile.x+32 and self.y == player.tile.y-32)
@@ -55,17 +56,18 @@ function Tile:draw()
     or (self.x == player.tile.x-64 and self.y == player.tile.y)
     or (self.x == player.tile.x and self.y == player.tile.y-32)
     or (self.x == player.tile.x and self.y == player.tile.y-64)
-  then
-    if (self.x == player.tile.x and self.y == player.tile.y-32)
-      or (self.x == player.tile.x and self.y == player.tile.y+32)
-      or (self.x == player.tile.x+32 and self.y == player.tile.y)
+    then
+      if (self.x == player.tile.x and self.y == player.tile.y-32)
+       or (self.x == player.tile.x and self.y == player.tile.y+32)
+        or (self.x == player.tile.x+32 and self.y == player.tile.y)
       then
         love.graphics.setColor(255, 255, 255)
       else
         love.graphics.setColor(self.red, self.blue, self.green)
+      end
+    love.graphics.print(self.costValue, self.x, self.y)
+    love.graphics.setColor(255, 255, 255)
     end
-  love.graphics.print(self.costValue, self.x, self.y)
-  love.graphics.setColor(255, 255, 255)
   end
 
   --run the animation for the path the payer has traveled
