@@ -18,22 +18,22 @@ end
 function Tile:draw()
   -- Be a good citizen and pop the graphics back to their proper
   -- colours when we're done.
-  local oldr, oldg, oldb, olda = love.graphics.getColor()
-
   local mousex, mousey = love.mouse.getPosition()
   if self:is_inside(mousex, mousey) then
+    local oldr, oldg, oldb, olda = love.graphics.getColor()
+
     love.graphics.setColor(255, 255, 255)
     love.graphics.line(self.x, self.y, (self.x+self.sx), self.y)
     love.graphics.line(self.x, self.y, self.x, (self.y+self.sy))
     love.graphics.line((self.x+self.sx), self.y, (self.x+self.sx), (self.y+self.sy))
     love.graphics.line(self.x, (self.y+self.sy), (self.x+self.sx), (self.y+self.sy))
+
+    love.graphics.setColor(oldr, oldg, oldb, olsa)
   end
 
   if playertile == self then
     anim:draw(self.x, self.y)
   end
-
-  love.graphics.setColor(oldr, oldg, oldb, olsa)
 end
 
 function Tile:is_inside(x, y)
