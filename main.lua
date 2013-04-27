@@ -7,12 +7,13 @@ require("AnAL")
 playertile = nil
 
 -- Handle processing for each of the game tiles.
-Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32}
+Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32, costValue = 1}
 Tile_mt = { __index = Tile }
 function Tile:new(x, y, sx, sy)
   sx = sx or 32
   sy = sy or 32
-  return setmetatable( {x=x, y=y, sx=sx, sy=sy}, Tile_mt)
+  costValue = math.random(5)
+  return setmetatable( {x=x, y=y, sx=sx, sy=sy, costValue=costValue}, Tile_mt)
 end
 
 function Tile:draw()
@@ -22,11 +23,14 @@ function Tile:draw()
   if self:is_inside(mousex, mousey) then
     local oldr, oldg, oldb, olda = love.graphics.getColor()
 
+
     love.graphics.setColor(255, 255, 255)
     love.graphics.line(self.x, self.y, (self.x+self.sx), self.y)
     love.graphics.line(self.x, self.y, self.x, (self.y+self.sy))
     love.graphics.line((self.x+self.sx), self.y, (self.x+self.sx), (self.y+self.sy))
     love.graphics.line(self.x, (self.y+self.sy), (self.x+self.sx), (self.y+self.sy))
+
+    love.graphics.print(self.costValue, self.x, self.y)
 
     love.graphics.setColor(oldr, oldg, oldb, olsa)
   end
