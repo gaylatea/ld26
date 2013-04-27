@@ -3,8 +3,8 @@
 -- Animation library.
 require("AnAL")
 
--- Current tile the player is located in.
-playertile = nil
+-- Stats about the player.
+player = {tile=nil, energy=100}
 
 -- Handle processing for each of the game tiles.
 Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32, costValue = 1}
@@ -35,7 +35,7 @@ function Tile:draw()
     love.graphics.setColor(oldr, oldg, oldb, olsa)
   end
 
-  if playertile == self then
+  if player.tile == self then
     anim:draw(self.x, self.y)
   end
 end
@@ -48,15 +48,15 @@ end
 function Tile:is_legal_move()
   -- Does not allow diagonal motion. Might want to change that soon.
   -- Also does not allow backwards motion. (west)
-  if self.x == (playertile.x + 32) and self.y == playertile.y then
+  if self.x == (player.tile.x + 32) and self.y == player.tile.y then
     return true
   end
 
-  if self.y == (playertile.y + 32) and self.x == playertile.x then
+  if self.y == (player.tile.y + 32) and self.x == player.tile.x then
     return true
   end
 
-  if self.y == (playertile.y - 32) and self.x == playertile.x then
+  if self.y == (player.tile.y - 32) and self.x == player.tile.x then
     return true
   end
 end
@@ -79,7 +79,7 @@ function love.load()
     row = row + 1
   until row == 15
 
-  playertile = tiles[8][1]
+  player.tile = tiles[8][1]
 
   local image = love.graphics.newImage('ball1.png')
   anim = newAnimation(image, 32, 32, 0.13, 0)
@@ -94,6 +94,7 @@ function love.draw()
   -- Draw the grid system.
   love.graphics.setColor(255, 255, 255)
   love.graphics.print("Path. Use the mouse to navigate.", 100, 50)
+  love.graphics.print("Current Energy: " .. player.energy, 100, 65)
   for i, v in ipairs(tiles) do
     for row, tile in ipairs(v) do tile:draw() end
   end
@@ -104,7 +105,8 @@ function love.mousepressed(x, y, button)
     for row, v in ipairs(tiles) do
       for column, tile in ipairs(v) do
         if tile:is_inside(x, y) and tile:is_legal_move() then
-          playertile = tiles[row][column]
+          player.tile = tiles[row][column]
+          player.energy = player.energy - player.tile.costValue
           break
         end
       end
