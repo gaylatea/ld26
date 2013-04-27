@@ -74,7 +74,7 @@ function Tile:draw()
 
   if player.tile == self then
     if playDeath then
-      if animations.death:getCurrentFrame() == 6 then
+      if animations.death:getCurrentFrame() == 7 then
         reset()
       end
       animations.death:draw(self.x, self.y)
@@ -133,18 +133,17 @@ function reset()
   player.tile   = tiles[8][1]
   player.energy = 100
   playDeath = False
+  animations.death:seek(1)
 end
 
 function love.load()
   -- Create some sample tiles to mess around with.
-  reset()
-
   local images = {
     good  = love.graphics.newImage("ball1.png"),
     okay  = love.graphics.newImage("ball75.png"),
     bad   = love.graphics.newImage("ball50.png"),
     dying = love.graphics.newImage("ball25.png"),
-    death = love.graphics.newImage("ball0.png"),
+    death = love.graphics.newImage("ball0b.png"),
   }
 
   animations = {
@@ -152,10 +151,12 @@ function love.load()
     okay  = newAnimation(images.okay, 32, 32, 0.13, 0),
     bad   = newAnimation(images.bad, 32, 32, 0.13, 0),
     dying = newAnimation(images.dying, 32, 32, 0.13, 0),
-    death = newAnimation(images.death, 32, 32, 0.13, 0),
+    death = newAnimation(images.death, 32, 32, 0.25, 0),
   }
 
   spaceBackground = love.graphics.newImage("spacebg.png")
+
+  reset()
 
 end
 
