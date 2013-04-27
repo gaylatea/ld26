@@ -103,7 +103,7 @@ function love.mousepressed(x, y, button)
   if button == "l" then
     for row, v in ipairs(tiles) do
       for column, tile in ipairs(v) do
-        if tile:is_inside(x, y) then
+        if tile:is_inside(x, y) and tile:is_legal_move() then
           playertile = tiles[row][column]
           break
         end
