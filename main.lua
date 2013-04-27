@@ -47,8 +47,8 @@ function Tile:draw()
     or (self.x == playertile.x-64 and self.y == playertile.y)
     or (self.x == playertile.x and self.y == playertile.y-32)
     or (self.x == playertile.x and self.y == playertile.y-64)
-  then 
-  self.visible = true
+  then
+  love.graphics.print(self.costValue, self.x, self.y)
   end
 
   --Only draw the tiles value if it is set to visible
@@ -128,6 +128,7 @@ function love.mousepressed(x, y, button)
     for row, v in ipairs(tiles) do
       for column, tile in ipairs(v) do
         if tile:is_inside(x, y) and tile:is_legal_move() then
+          playertile.visible = true
           playertile = tiles[row][column]
           break
         end
