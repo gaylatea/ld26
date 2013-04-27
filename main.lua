@@ -1,9 +1,18 @@
 -- ld26 main.lua
 -- Callbacks for Love2d.
+
+require("AnAL")
 tile = 1
 
 function love.load()
-  image = love.graphics.newImage('samplesprite.png')
+  image = love.graphics.newImage('ball1.png')
+  anim = newAnimation(image, 32, 32, 0.1, 0)
+  --anim:setMode("loop")
+end
+
+function love.update(dt)
+   -- Updates the animation. (Enables frame changes)
+   anim:update(dt)   
 end
 
 function love.draw()
@@ -29,7 +38,8 @@ function love.draw()
   -- Figure out where to draw the player.
   row = math.floor((tile / 34) + 1)
   column = (tile % 34) + 1
-  love.graphics.draw(image, ((column * 32) + 36), ((row * 32) + 67))
+  anim:draw(((column * 32) + 36), ((row * 32) + 67)) 
+  --love.graphics.draw(anim, ((column * 32) + 36), ((row * 32) + 67))
 end
 
 function love.keyreleased(key, unicode)
