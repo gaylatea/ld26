@@ -8,14 +8,17 @@ player    = {tile=nil, energy=100, animation=nil}
 playDeath = false
 
 -- Handle processing for each of the game tiles.
-Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32, costValue = 1, visible = false}
+Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32, costValue = 1, visible = false, red=90, green=90, blue=90}
 Tile_mt = { __index = Tile }
 function Tile:new(x, y, sx, sy)
   sx = sx or 32
   sy = sy or 32
   costValue = math.random(5)
   visible = visible or false
-  return setmetatable( {x=x, y=y, sx=sx, sy=sy, costValue=costValue, visible=visible}, Tile_mt)
+  red = red or 90
+  green = green or 90
+  blue = blue or 90
+  return setmetatable( {x=x, y=y, sx=sx, sy=sy, costValue=costValue, visible=visible, red=red, green=green, blue=blue}, Tile_mt)
 end
 
 function Tile:draw()
@@ -47,14 +50,27 @@ function Tile:draw()
     or (self.x == player.tile.x-64 and self.y == player.tile.y)
     or (self.x == player.tile.x and self.y == player.tile.y-32)
     or (self.x == player.tile.x and self.y == player.tile.y-64)
+    or self.visible == true
   then
+    if (self.x == player.tile.x and self.y == player.tile.y-32)
+      or (self.x == player.tile.x and self.y == player.tile.y+32)
+      or (self.x == player.tile.x+32 and self.y == player.tile.y)
+      then
+        love.graphics.setColor(255, 255, 255)
+      else
+        love.graphics.setColor(self.red, self.blue, self.green)
+    end
   love.graphics.print(self.costValue, self.x, self.y)
+  love.graphics.setColor(255, 255, 255)
   end
 
   --Only draw the tiles value if it is set to visible
-  if self.visible == true then
-    love.graphics.print(self.costValue, self.x, self.y)
-  end
+  --if self.visible == true then
+  --  love.graphics.setColor(self.red, self.blue, self.green)
+  --  love.graphics.print(self.costValue, self.x, self.y)
+    --reset color
+   -- love.graphics.setColor(255, 255, 255)
+  --end
 
   if player.tile == self then
     if playDeath then
