@@ -10,7 +10,9 @@ currentLevel  = 1
 targetTile    = nil
 
 -- Handle processing for each of the game tiles.
-Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32, costValue = 1, visible = false, red=90, green=90, blue=90}
+Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32,
+        costValue = 1, visible = false,
+        red=90, green=90, blue=90}
 Tile_mt = { __index = Tile }
 function Tile:new(x, y, gx, gy)
   costValue = math.random(5)
@@ -20,6 +22,7 @@ function Tile:new(x, y, gx, gy)
   blue = blue or 90
   return setmetatable( {x=x, y=y, gx=gx, gy=gy, costValue=costValue, visible=visible, red=red, green=green, blue=blue}, Tile_mt)
 end
+
 
 function Tile:draw()
   -- Draw the target tile in red so we know what's up.
@@ -48,8 +51,10 @@ function Tile:draw()
     love.graphics.setColor(oldr, oldg, oldb, olda)
   end
 
+  if self:is_inside(mousex, mousey)
+    then
   --Check to see if the the tile is within range of the player, if so then make the cost value visible
-  if (self.x == player.tile.x and self.y == player.tile.y)
+    if (self.x == player.tile.x and self.y == player.tile.y)
     or (self.x == player.tile.x+32 and self.y == player.tile.y+32)
     or (self.x == player.tile.x-32 and self.y == player.tile.y-32)
     or (self.x == player.tile.x+32 and self.y == player.tile.y-32)
@@ -72,18 +77,22 @@ function Tile:draw()
         love.graphics.setColor(255, 255, 255)
       else
         love.graphics.setColor(self.red, self.blue, self.green)
+      end
+    love.graphics.print(self.costValue, self.x+13, self.y+9)
+    love.graphics.setColor(255, 255, 255)
     end
-  love.graphics.print(self.costValue, self.x+13, self.y+9)
-  love.graphics.setColor(255, 255, 255)
   end
 
-  --Only draw the tiles value if it is set to visible
-  --if self.visible == true then
-  --  love.graphics.setColor(self.red, self.blue, self.green)
-  --  love.graphics.print(self.costValue, self.x, self.y)
-    --reset color
-   -- love.graphics.setColor(255, 255, 255)
-  --end
+  --run the animation for the path the payer has traveled
+  if self.visible == true and self~=player.tile
+    then
+    if self.t_path == true
+      then
+      animations.t_path:draw(self.x, self.y)
+    else
+    animations.s_path:draw(self.x, self.y)
+    end
+  end
 
   if player.tile == self then
     if playDeath then
@@ -176,6 +185,8 @@ function love.load()
     bad   = love.graphics.newImage("ball50.png"),
     dying = love.graphics.newImage("ball25.png"),
     death = love.graphics.newImage("ball0b.png"),
+    s_path = love.graphics.newImage("ball0.png"),
+    t_path = love.graphics.newImage("ball25.png"),
   }
 
   animations = {
@@ -184,6 +195,8 @@ function love.load()
     bad   = newAnimation(images.bad, 32, 32, 0.13, 0),
     dying = newAnimation(images.dying, 32, 32, 0.13, 0),
     death = newAnimation(images.death, 32, 32, 0.25, 0),
+    s_path = newAnimation(images.s_path, 32, 32, 0.13, 0),
+    t_path = newAnimation(images.s_path, 32, 32, 0.13, 0)
   }
 
   spaceBackground = love.graphics.newImage("spacebg.png")
@@ -199,6 +212,8 @@ function love.update(dt)
   animations.okay:update(dt)
   animations.bad:update(dt)
   animations.dying:update(dt)
+  animations.s_path:update(dt)
+  animations.t_path:update(dt)
 
   if playDeath then
     animations.death:update(dt)
