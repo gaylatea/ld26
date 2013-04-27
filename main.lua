@@ -44,15 +44,22 @@ end
 
 function love.load()
   -- Create some sample tiles to mess around with.
-  local tile = 0
+  local row = 0
   tiles = {}
   repeat
-    local x = (tile * 32) + 100
-    table.insert(tiles, Tile:new(x, 100))
-    tile = tile + 1
-  until tile >= 20
+    local y = (row * 32) + 100
+    local column = 0
+    local rowtable = {}
+    repeat
+      local x = (column * 32) + 100
+      table.insert(rowtable, Tile:new(x, y))
+      column = column + 1
+    until column == 32
+    table.insert(tiles, rowtable)
+    row = row + 1
+  until row == 15
 
-  playertile = tiles[1]
+  playertile = tiles[8][1]
 
   local image = love.graphics.newImage('ball1.png')
   anim = newAnimation(image, 32, 32, 0.13, 0)
@@ -67,15 +74,19 @@ function love.draw()
   -- Draw the grid system.
   love.graphics.setColor(255, 255, 255)
   love.graphics.print("Path. Use the mouse to navigate.", 100, 50)
-  for i, v in ipairs(tiles) do v:draw() end
+  for i, v in ipairs(tiles) do
+    for row, tile in ipairs(v) do tile:draw() end
+  end
 end
 
 function love.mousepressed(x, y, button)
   if button == "l" then
-    for i, v in ipairs(tiles) do
-      if v:is_inside(x, y) then
-        playertile = tiles[i]
-        break
+    for row, v in ipairs(tiles) do
+      for column, tile in ipairs(v) do
+        if tile:is_inside(x, y) then
+          playertile = tiles[row][column]
+          break
+        end
       end
     end
   end
