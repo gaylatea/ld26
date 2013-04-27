@@ -1,53 +1,71 @@
 -- ld26 main.lua
 -- Callbacks for Love2d.
-tile = 1
+
+-- Current tile the player is located in.
+playertile = nil
+
+-- Handle processing for each of the game tiles.
+Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32}
+Tile_mt = { __index = Tile }
+function Tile:new(x, y)
+  return setmetatable( {x=x, y=y}, Tile_mt)
+end
+
+function Tile:draw()
+  -- Be a good citizen and pop the graphics back to their proper
+  -- colours when we're done.
+  local oldr, oldg, oldb, olda = love.graphics.getColor()
+
+  local mousex, mousey = love.mouse.getPosition()
+  if self:is_inside(mousex, mousey) then
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.line(self.x, self.y, (self.x+32), self.y)
+    love.graphics.line(self.x, self.y, self.x, (self.y+32))
+    love.graphics.line((self.x+32), self.y, (self.x+32), (self.y+32))
+    love.graphics.line(self.x, (self.y+32), (self.x+32), (self.y+32))
+  end
+
+  if playertile == self then
+    love.graphics.draw(image, self.x, self.y)
+  end
+
+  love.graphics.setColor(oldr, oldg, oldb, olsa)
+end
+
+function Tile:is_inside(x, y)
+  return(x >= (self.x + 1) and x <= (self.x + 31) and
+    y >= (self.y + 1) and y <= (self.y + 31))
+end
+
 
 function love.load()
   image = love.graphics.newImage('samplesprite.png')
+  -- Create some sample tiles to mess around with.
+  local tile = 0
+  tiles = {}
+  repeat
+    local x = (tile * 32) + 100
+    table.insert(tiles, Tile:new(x, 100))
+    tile = tile + 1
+  until tile >= 20
+
+  playertile = tiles[1]
 end
 
 function love.draw()
   -- Draw the grid system.
-  love.graphics.setColor(100, 100, 100)
-  love.graphics.line(100, 100, 1156, 100)
-  love.graphics.line(100, 612, 1156, 612)
-  love.graphics.line(100, 100, 100, 612)
-  love.graphics.line(1156, 100, 1156, 612)
-
-  y = 100
-  repeat
-    y = y + 32
-    love.graphics.line(100, y, 1156, y)
-  until y > 610
-
-  x = 100
-  repeat
-    x = x + 32
-    love.graphics.line(x, 100, x, 612)
-  until x > 1140
-
-  -- Figure out where to draw the player.
-  row = math.floor((tile / 34) + 1)
-  column = (tile % 34) + 1
-  love.graphics.draw(image, ((column * 32) + 36), ((row * 32) + 67))
+  love.graphics.setColor(255, 255, 255)
+  love.graphics.print("Path. Use the mouse to navigate.", 100, 50)
+  for i, v in ipairs(tiles) do v:draw() end
 end
 
-function love.keyreleased(key, unicode)
-  if key == 'down' then
-    tile = tile + 34
-  elseif key == 'up' then
-    if tile < 35 then
-      tile = 1
-    else
-      tile = tile - 34
-    end
-  elseif key == 'right' then
-    tile = tile + 1
-  elseif key == 'left' then
-    if tile <= 1 then
-      tile = 1
-    else
-      tile = tile - 1
+function love.mousepressed(x, y, button)
+  if button == "l" then
+    for i, v in ipairs(tiles) do
+      if v:is_inside(x, y) then
+        playertile = tiles[i]
+        break
+      end
     end
   end
 end
