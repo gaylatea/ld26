@@ -8,18 +8,22 @@ player    = {tile=nil, energy=100, animation=nil}
 playDeath = false
 
 -- Handle processing for each of the game tiles.
-Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32, costValue = 1, visible = false, red=90, green=90, blue=90}
+Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32, 
+        costValue = 1, visible = false, t_path = false,
+        red=90, green=90, blue=90}
 Tile_mt = { __index = Tile }
 function Tile:new(x, y, sx, sy)
   sx = sx or 32
   sy = sy or 32
   costValue = math.random(5)
   visible = visible or false
+  t_path = t_path or false
   red = red or 90
   green = green or 90
   blue = blue or 90
   return setmetatable( {x=x, y=y, sx=sx, sy=sy, costValue=costValue, visible=visible, red=red, green=green, blue=blue}, Tile_mt)
 end
+
 
 function Tile:draw()
   -- Be a good citizen and pop the graphics back to their proper
@@ -51,7 +55,6 @@ function Tile:draw()
     or (self.x == player.tile.x-64 and self.y == player.tile.y)
     or (self.x == player.tile.x and self.y == player.tile.y-32)
     or (self.x == player.tile.x and self.y == player.tile.y-64)
-    or self.visible == true
   then
     if (self.x == player.tile.x and self.y == player.tile.y-32)
       or (self.x == player.tile.x and self.y == player.tile.y+32)
@@ -65,13 +68,16 @@ function Tile:draw()
   love.graphics.setColor(255, 255, 255)
   end
 
-  --Only draw the tiles value if it is set to visible
-  --if self.visible == true then
-  --  love.graphics.setColor(self.red, self.blue, self.green)
-  --  love.graphics.print(self.costValue, self.x, self.y)
-    --reset color
-   -- love.graphics.setColor(255, 255, 255)
-  --end
+  --run the animation for the path the payer has traveled
+  if self.visible == true and self~=player.tile
+    then
+    if self.t_path == true
+      then
+      animations.t_path:draw(self.x, self.y)
+    else
+    animations.s_path:draw(self.x, self.y)
+    end
+  end
 
   if player.tile == self then
     if playDeath then
@@ -146,6 +152,8 @@ function love.load()
     bad   = love.graphics.newImage("ball50.png"),
     dying = love.graphics.newImage("ball25.png"),
     death = love.graphics.newImage("ball0.png"),
+    s_path = love.graphics.newImage("ball0.png"),
+    t_path = love.graphics.newImage("ball25.png"),
   }
 
   animations = {
@@ -154,6 +162,8 @@ function love.load()
     bad   = newAnimation(images.bad, 32, 32, 0.13, 0),
     dying = newAnimation(images.dying, 32, 32, 0.13, 0),
     death = newAnimation(images.death, 32, 32, 0.13, 0),
+    s_path = newAnimation(images.s_path, 32, 32, 0.13, 0),
+    t_path = newAnimation(images.s_path, 32, 32, 0.13, 0)
   }
 
 end
@@ -164,6 +174,8 @@ function love.update(dt)
   animations.okay:update(dt)
   animations.bad:update(dt)
   animations.dying:update(dt)
+  animations.s_path:update(dt)
+  animations.t_path:update(dt)
 
   if playDeath then
     animations.death:update(dt)
