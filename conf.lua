@@ -1,6 +1,6 @@
 -- New config changes for this Love2d game.
 function love.conf(t)
-    t.title             = "LD26"
+    t.title             = "Path."
     t.author            = "Blue Heaven"
     t.url               = "https://github.com/blueheaven/ld26"
     t.screen.width      = 1280
