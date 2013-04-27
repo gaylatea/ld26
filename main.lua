@@ -1,5 +1,7 @@
 -- ld26 main.lua
 -- Callbacks for Love2d.
+-- Animation library.
+require("AnAL")
 
 -- Current tile the player is located in.
 playertile = nil
@@ -28,7 +30,7 @@ function Tile:draw()
   end
 
   if playertile == self then
-    love.graphics.draw(image, self.x, self.y)
+    anim:draw(self.x, self.y)
   end
 
   love.graphics.setColor(oldr, oldg, oldb, olsa)
@@ -41,7 +43,6 @@ end
 
 
 function love.load()
-  image = love.graphics.newImage('samplesprite.png')
   -- Create some sample tiles to mess around with.
   local tile = 0
   tiles = {}
@@ -52,6 +53,14 @@ function love.load()
   until tile >= 20
 
   playertile = tiles[1]
+
+  local image = love.graphics.newImage('ball1.png')
+  anim = newAnimation(image, 32, 32, 0.13, 0)
+end
+
+function love.update(dt)
+   -- Updates the animation. (Enables frame changes)
+   anim:update(dt)
 end
 
 function love.draw()
