@@ -25,13 +25,12 @@ function Tile:draw()
   if self:is_inside(mousex, mousey) and self:is_legal_move() then
     local oldr, oldg, oldb, olda = love.graphics.getColor()
 
-
     love.graphics.setColor(255, 255, 255)
     love.graphics.line(self.x, self.y, (self.x+self.sx), self.y)
     love.graphics.line(self.x, self.y, self.x, (self.y+self.sy))
     love.graphics.line((self.x+self.sx), self.y, (self.x+self.sx), (self.y+self.sy))
     love.graphics.line(self.x, (self.y+self.sy), (self.x+self.sx), (self.y+self.sy))
-    love.graphics.setColor(oldr, oldg, oldb, olsa)
+    love.graphics.setColor(oldr, oldg, oldb, olda)
   end
 
   --Check to see if the the tile is within range of the player, if so then make the cost value visible
