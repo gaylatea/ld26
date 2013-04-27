@@ -7,8 +7,10 @@ playertile = nil
 -- Handle processing for each of the game tiles.
 Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32}
 Tile_mt = { __index = Tile }
-function Tile:new(x, y)
-  return setmetatable( {x=x, y=y}, Tile_mt)
+function Tile:new(x, y, sx, sy)
+  sx = sx or 32
+  sy = sy or 32
+  return setmetatable( {x=x, y=y, sx=sx, sy=sy}, Tile_mt)
 end
 
 function Tile:draw()
@@ -19,10 +21,10 @@ function Tile:draw()
   local mousex, mousey = love.mouse.getPosition()
   if self:is_inside(mousex, mousey) then
     love.graphics.setColor(255, 255, 255)
-    love.graphics.line(self.x, self.y, (self.x+32), self.y)
-    love.graphics.line(self.x, self.y, self.x, (self.y+32))
-    love.graphics.line((self.x+32), self.y, (self.x+32), (self.y+32))
-    love.graphics.line(self.x, (self.y+32), (self.x+32), (self.y+32))
+    love.graphics.line(self.x, self.y, (self.x+self.sx), self.y)
+    love.graphics.line(self.x, self.y, self.x, (self.y+self.sy))
+    love.graphics.line((self.x+self.sx), self.y, (self.x+self.sx), (self.y+self.sy))
+    love.graphics.line(self.x, (self.y+self.sy), (self.x+self.sx), (self.y+self.sy))
   end
 
   if playertile == self then
@@ -33,8 +35,8 @@ function Tile:draw()
 end
 
 function Tile:is_inside(x, y)
-  return(x >= (self.x + 1) and x <= (self.x + 31) and
-    y >= (self.y + 1) and y <= (self.y + 31))
+  return(x >= (self.x + 1) and x <= (self.x + (self.sx - 1)) and
+    y >= (self.y + 1) and y <= (self.y + (self.sy - 1)))
 end
 
 
