@@ -4,7 +4,8 @@
 require("AnAL")
 
 -- Stats about the player.
-player = {tile=nil, energy=100}
+player    = {tile=nil, energy=100, animation=nil}
+playDeath = false
 
 -- Handle processing for each of the game tiles.
 Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32, costValue = 1}
@@ -36,14 +37,21 @@ function Tile:draw()
   end
 
   if player.tile == self then
-    if player.energy >= 76 then
-      animations.good:draw(self.x, self.y)
-    elseif player.energy >= 51 then
-      animations.okay:draw(self.x, self.y)
-    elseif player.energy >= 26 then
-      animations.bad:draw(self.x, self.y)
+    if playDeath then
+      if animations.death:getCurrentFrame() == 6 then
+        reset()
+      end
+      animations.death:draw(self.x, self.y)
     else
-      animations.dying:draw(self.x, self.y)
+      if player.energy >= 76 then
+        animations.good:draw(self.x, self.y)
+      elseif player.energy >= 51 then
+        animations.okay:draw(self.x, self.y)
+      elseif player.energy >= 26 then
+        animations.bad:draw(self.x, self.y)
+      else
+        animations.dying:draw(self.x, self.y)
+      end
     end
   end
 end
@@ -69,9 +77,7 @@ function Tile:is_legal_move()
   end
 end
 
-
-function love.load()
-  -- Create some sample tiles to mess around with.
+function reset()
   local row = 0
   tiles = {}
   repeat
@@ -87,13 +93,21 @@ function love.load()
     row = row + 1
   until row == 15
 
-  player.tile = tiles[8][1]
+  player.tile   = tiles[8][1]
+  player.energy = 100
+  playDeath = False
+end
+
+function love.load()
+  -- Create some sample tiles to mess around with.
+  reset()
 
   local images = {
     good  = love.graphics.newImage("ball1.png"),
     okay  = love.graphics.newImage("ball75.png"),
     bad   = love.graphics.newImage("ball50.png"),
     dying = love.graphics.newImage("ball25.png"),
+    death = love.graphics.newImage("ball0.png"),
   }
 
   animations = {
@@ -101,6 +115,7 @@ function love.load()
     okay  = newAnimation(images.okay, 32, 32, 0.13, 0),
     bad   = newAnimation(images.bad, 32, 32, 0.13, 0),
     dying = newAnimation(images.dying, 32, 32, 0.13, 0),
+    death = newAnimation(images.death, 32, 32, 0.13, 0),
   }
 
 end
@@ -111,6 +126,10 @@ function love.update(dt)
   animations.okay:update(dt)
   animations.bad:update(dt)
   animations.dying:update(dt)
+
+  if playDeath then
+    animations.death:update(dt)
+  end
 end
 
 function love.draw()
@@ -129,10 +148,17 @@ function love.mousepressed(x, y, button)
       for column, tile in ipairs(v) do
         if tile:is_inside(x, y) and tile:is_legal_move() then
           player.tile = tiles[row][column]
-          player.energy = player.energy - player.tile.costValue
+          if player.tile.costValue >= player.energy then
+            playDeath = true
+            player.energy = 0
+          else
+            player.energy = player.energy - player.tile.costValue
+          end
           break
         end
       end
     end
+  elseif button == "r" then
+    reset()
   end
 end
