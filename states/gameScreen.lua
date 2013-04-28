@@ -9,7 +9,8 @@ gameScreen_mt = { __index = gameScreen }
 function gameScreen:new()
   -- Load in necessary resources for this screen.
   local images = {
-    s_path        = love.graphics.newImage("assets/trail H.png"),
+    sh_path        = love.graphics.newImage("assets/trail H.png"),
+    sv_path        = love.graphics.newImage("assets/trail V.png"),
     ur_path        = love.graphics.newImage("assets/trail UR.png"),
     ul_path        = love.graphics.newImage("assets/trail UL.png"),
     dr_path        = love.graphics.newImage("assets/trail DR.png"),
@@ -22,7 +23,12 @@ function gameScreen:new()
   }
 
   local animations = {
-    s_path  = newAnimation(images.s_path, 32, 32, 0.13, 0),
+    sh_path  = newAnimation(images.sh_path, 32, 32, 0.13, 0),
+    sv_path  = newAnimation(images.sv_path, 32, 32, 0.13, 0),
+    ur_path  = newAnimation(images.ur_path, 32, 32, 0.13, 0),
+    ul_path  = newAnimation(images.ul_path, 32, 32, 0.13, 0),
+    dr_path  = newAnimation(images.dr_path, 32, 32, 0.13, 0),
+    dl_path  = newAnimation(images.dl_path, 32, 32, 0.13, 0),
   }
 
   spaceBackground = love.graphics.newImage("assets/spacebg.png")
@@ -53,7 +59,7 @@ end
 function gameScreen:update(dt)
   -- Update any animations on this screen.
   player:update(dt)
-  self.animations.s_path:update(dt)
+  self.animations.sh_path:update(dt)
 end
 
 function gameScreen:click(x, y, button)

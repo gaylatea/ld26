@@ -1,3 +1,4 @@
+require("lib/path")
 -- Tile class.
 -- Handle processing for each of the game tiles.
 Tile = {
@@ -9,6 +10,7 @@ Tile = {
   costValue = 1,
   visible   = false,
   level     = 0,
+  pathAnimation = nil
 }
 Tile_mt = { __index = Tile }
 
@@ -36,6 +38,7 @@ function Tile:new(x, y, gx, gy, level)
     costValue = costValue,
     visible   = visible,
     level     = level,
+    pathAnimation = pathAnimation
   }, Tile_mt)
 end
 
@@ -95,7 +98,11 @@ function Tile:draw()
 
   -- Show tiles that the player has passed through.
   if self.visible == true and self~=player.tile then
-    game.animations.s_path:draw(self.x, self.y)
+      --love.graphics.print("Hi", self.x, self.y)
+
+    --pathAnimation = path.tile.pathAnimation
+    love.graphics.draw(path.tile.pathAnimation, self.x, self.y)
+    
   end
 
   -- Do not show the tile underlying the player as it can confuse.
@@ -154,6 +161,7 @@ function Tile:click(x, y)
   -- Click handler for each tile.
   if self:is_inside(x, y) and self:is_legal_move() then
     player.tile.visible = true
+    Path:new(player.tile)
 
     -- Set up the next level if we've reached the target.
     if self == game.level.target then
