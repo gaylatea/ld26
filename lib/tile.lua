@@ -69,13 +69,15 @@ function Tile:draw()
   love.graphics.setColor(oldr, oldg, oldb, olda)
 
   --run the animation for the path the payer has traveled
-  if self.visible == true and self ~= player.tile then
+  if self ~= player.tile then
     game.animations.s_path:draw(self.x, self.y)
   end
 
   -- Do not show the tile underlying the player as it can confuse.
   if player.tile == self then
     player:draw(self.x, self.y)
+  else
+    game.animations.s_path:draw(self.x, self.y)
   end
 end
 
