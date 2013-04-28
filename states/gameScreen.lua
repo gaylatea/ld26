@@ -91,18 +91,32 @@ function gameScreen:click(x, y, button)
 end
 
 function gameScreen:keyboardPressed(button)
-  if button ~= nil
+  if button == "up" 
     then
-    elseif button == "up" then
-      player.y = player.y + 32
+      player.tile.y = player.tile.y - 32
       elseif button == "down" then
-        player.y = player.y - 32
+        player.tile.y = player.tile.y + 32
         elseif button == "left" then
-          player.y = player.y - 32
+          player.tile.x = player.tile.x - 32
           elseif button == "right" then
-            player.y = player.y + 32
+            player.tile.x = player.tile.x + 32
   end 
+  if tile == game.level.target then
+            game.level = Level:new(game.level.number + 1)
+          end
+          player.tile.visible = true
+          --player.tile = game.level.tiles[player.tile.x][player.tile.y]
+          if player.tile.costValue >= player.energy then
+            playDeath = true
+            player.energy = 0
+            love.audio.play(self.sounds.death)
+          else
+            player.energy = player.energy - player.tile.costValue
+          end
+--player.tile = game.level.tiles[player.tile.x][player.tile.y]
+--player.energy = player.energy - player.tile.costValue
 end
+
 
 
 function gameScreen:draw()
