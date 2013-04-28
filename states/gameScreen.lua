@@ -9,27 +9,15 @@ gameScreen_mt = { __index = gameScreen }
 function gameScreen:new()
   -- Load in necessary resources for this screen.
   local images = {
-    good          = love.graphics.newImage("assets/ball1.png"),
-    okay          = love.graphics.newImage("assets/ball75.png"),
-    bad           = love.graphics.newImage("assets/ball50.png"),
-    dying         = love.graphics.newImage("assets/ball25.png"),
-    death         = love.graphics.newImage("assets/ball0b.png"),
     s_path        = love.graphics.newImage("assets/ball0.png"),
     t_path        = love.graphics.newImage("assets/ball25.png"),
     asteroidBelt  = love.graphics.newImage("assets/asteroid belt.png"),
     spaceStation  = love.graphics.newImage("assets/space station.png"),
     sun           = love.graphics.newImage("assets/sun.png"),
-
   }
 
   local animations = {
-    good    = newAnimation(images.good, 32, 32, 0.13, 0),
-    okay    = newAnimation(images.okay, 32, 32, 0.13, 0),
-    bad     = newAnimation(images.bad, 32, 32, 0.13, 0),
-    dying   = newAnimation(images.dying, 32, 32, 0.13, 0),
-    death   = newAnimation(images.death, 32, 32, 0.25, 0),
     s_path  = newAnimation(images.s_path, 32, 32, 0.13, 0),
-    t_path  = newAnimation(images.s_path, 32, 32, 0.13, 0)
   }
 
   spaceBackground = love.graphics.newImage("assets/spacebg.png")
@@ -53,16 +41,8 @@ end
 
 function gameScreen:update(dt)
   -- Update any animations on this screen.
-  self.animations.good:update(dt)
-  self.animations.okay:update(dt)
-  self.animations.bad:update(dt)
-  self.animations.dying:update(dt)
+  player:update(dt)
   self.animations.s_path:update(dt)
-  self.animations.t_path:update(dt)
-
-  if playDeath then
-    self.animations.death:update(dt)
-  end
 end
 
 function gameScreen:click(x, y, button)
@@ -70,19 +50,7 @@ function gameScreen:click(x, y, button)
   if button == "l" then
     for row, v in ipairs(game.level.tiles) do
       for column, tile in ipairs(v) do
-        if tile:is_inside(x, y) and tile:is_legal_move() then
-          if tile == game.level.target then
-            game.level = Level:new(game.level.number + 1)
-          end
-          player.tile.visible = true
-          player.tile = game.level.tiles[row][column]
-          if player.tile.costValue >= player.energy then
-            playDeath = true
-            player.energy = 0
-            love.audio.play(self.sounds.death)
-          else
-            player.energy = player.energy - player.tile.costValue
-          end
+        if tile:click(x, y) then
           break
         end
       end
@@ -97,24 +65,8 @@ function gameScreen:draw()
   love.graphics.print("Path. Use the mouse to navigate.", 100, 50)
   love.graphics.print("Current Energy: " .. player.energy, 100, 65)
   Achievement:display()
-  --if player.energy < 90 then
- -- love.graphics.print(, 600, 65)
---end
+
   for i, v in ipairs(self.level.tiles) do
     for row, tile in ipairs(v) do tile:draw() end
   end
-end
-
-function gameScreen:engagePotatoMode()
-  -- Swap the player's avatar for a potato floating through space.
-    local good          = love.graphics.newImage("assets/potato100.png")
-    local okay          = love.graphics.newImage("assets/potato75.png")
-    local bad           = love.graphics.newImage("assets/potato50.png")
-    local dying         = love.graphics.newImage("assets/potato25.png")
-    local death         = love.graphics.newImage("assets/potato0.png")
-    game.animations.good    = newAnimation(good, 32, 32, 0.13, 0)
-    game.animations.okay    = newAnimation(okay, 32, 32, 0.13, 0)
-    game.animations.bad     = newAnimation(bad, 32, 32, 0.13, 0)
-    game.animations.dying   = newAnimation(dying, 32, 32, 0.13, 0)
-    game.animations.death   = newAnimation(death, 32, 32, 0.25, 0)
 end
