@@ -41,6 +41,8 @@ end
 
 
 function Tile:draw()
+  -- Rendering loop for each tile.
+
   -- Draw the target tile in red so we know what's up.
   if game.level.target == self then
     self:box(255, 0, 0, 255)
@@ -79,7 +81,10 @@ function Tile:draw()
   end
 
   if self:is_inside(mousex, mousey) then
-    love.graphics.print(self.costValue, self.x+13, self.y+9)
+    -- Use a larger font to make things clearer.
+    love.graphics.setFont(game.fonts.large)
+    love.graphics.print(self.costValue, self.x+8, self.y-5)
+    love.graphics.setFont(game.fonts.normal)
   end
 
   love.graphics.setColor(oldr, oldg, oldb, olda)
