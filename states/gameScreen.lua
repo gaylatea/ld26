@@ -90,7 +90,6 @@ function gameScreen:draw()
 
   Achievement:display()
 
-  love.graphics.setFont(game.fonts.large)
   for i, v in ipairs(self.level.tiles) do
     for row, tile in ipairs(v) do tile:draw() end
   end
