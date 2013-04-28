@@ -37,11 +37,16 @@ function gameScreen:new()
   player.tile           = level.tiles[8][1]
   player.tile.costValue = 0
 
+  local sounds = {
+    death = love.audio.newSource("assets/explosion.wav"),
+  }
+
   return setmetatable({
     animations  = animations,
     bg          = spaceBackground,
     level       = level,
     images      = images,
+    sounds      = sounds,
   }, gameScreen_mt)
 end
 
@@ -73,6 +78,7 @@ function gameScreen:click(x, y, button)
           if player.tile.costValue >= player.energy then
             playDeath = true
             player.energy = 0
+            love.audio.play(self.sounds.death)
           else
             player.energy = player.energy - player.tile.costValue
           end

@@ -4,7 +4,10 @@ splashScreen_mt = { __index = splashScreen }
 
 function splashScreen:new()
   -- Load in necessary resources for the screen.
-  return setmetatable({}, splashScreen_mt)
+  local sounds = {
+    start   = love.audio.newSource("assets/start.wav"),
+  }
+  return setmetatable({ sounds = sounds }, splashScreen_mt)
 end
 
 function splashScreen:update(dt)
@@ -16,6 +19,8 @@ function splashScreen:click(x, y, button)
   if button == "r" then
     game:engagePotatoMode()
   end
+
+  love.audio.play(self.sounds.start)
   currentScreen = game
 end
 
