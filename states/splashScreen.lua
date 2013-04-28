@@ -7,7 +7,13 @@ function splashScreen:new()
   local sounds = {
     start   = love.audio.newSource("assets/start.wav"),
   }
-  return setmetatable({ sounds = sounds }, splashScreen_mt)
+
+  local background = love.graphics.newImage("assets/splash.png")
+
+  return setmetatable({
+    sounds      = sounds,
+    background  = background,
+  }, splashScreen_mt)
 end
 
 function splashScreen:update(dt)
@@ -30,5 +36,6 @@ end
 
 function splashScreen:draw()
   -- Draw this screen for the current frame.
-  love.graphics.print("Click the mouse to start", 550, 350)
+  love.graphics.draw(self.background, 0, 0)
+  love.graphics.print("Click the mouse to start", 750, 500)
 end
