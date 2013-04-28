@@ -33,8 +33,11 @@ animation.__index = animation
 -- @param fh The frame height
 -- @param delay The delay between two frames
 -- @param frames The number of frames, 0 for autodetect
+-- @param position_first The number of the first used frame, nil for autodetect
+-- @param position_last The number of the last used frame, nil for autodetect
+-- @param callback A method that is called when the animation is stopped
 -- @return The created animation
-function newAnimation(image, fw, fh, delay, frames)
+function newAnimation(image, fw, fh, delay, frames, position_first, position_last, callback)
 	local a = {}
 	a.img = image
 	a.frames = {}
@@ -46,6 +49,7 @@ function newAnimation(image, fw, fh, delay, frames)
 	a.playing = true
 	a.speed = 1
 	a.mode = 1
+	a.callback = callback
 	a.direction = 1
 	local imgw = image:getWidth()
 	local imgh = image:getHeight()
@@ -60,6 +64,11 @@ function newAnimation(image, fw, fh, delay, frames)
 		table.insert(a.frames, frame)
 		table.insert(a.delays, delay)
 	end
+
+	a.position_first = position_first or 1
+	a.position_last = position_last or #a.frames
+	a.position = a.position_first
+
 	return setmetatable(a, animation)
 end
 
@@ -68,12 +77,13 @@ end
 function animation:update(dt)
 	if not self.playing then return end
 	self.timer = self.timer + dt * self.speed
+	--print("update Animation ", self.timer, self.position, self.delays[self.position])
 	if self.timer > self.delays[self.position] then
 		self.timer = self.timer - self.delays[self.position]
 		self.position = self.position + 1 * self.direction
-		if self.position > #self.frames then
+		if self.position > self.position_last then
 			if self.mode == 1 then
-				self.position = 1
+				self.position = self.position_first
 			elseif self.mode == 2 then
 				self.position = self.position - 1
 				self:stop()
@@ -89,8 +99,15 @@ function animation:update(dt)
 end
 
 --- Draw the animation
-function animation:draw(...)
-	love.graphics.drawq(self.img, self.frames[self.position], ...)
+-- @param x The X coordinate
+-- @param y The Y coordinate
+-- @param angle The angle to draw at (radians)
+-- @param sx The scale on the X axis
+-- @param sy The scale on the Y axis
+-- @param ox The X coordinate of the origin
+-- @param oy The Y coordinate of the origin
+function animation:draw(x, y, angle, sx, sy, ox, oy)
+	love.graphics.drawq(self.img, self.frames[self.position], x, y, angle, sx, sy, ox, oy)
 end
 
 --- Add a frame
@@ -105,6 +122,16 @@ function animation:addFrame(x, y, w, h, delay)
 	table.insert(self.delays, delay)
 end
 
+
+--- Set Frame Limits, animation runs between them
+-- @param position_first number of the first frame to use
+-- @param position_last number of the last frame to use
+function animation:setLimitFrames(position_first, position_last)
+	self.position_first = position_first
+	self.position_last = position_last
+	self.position = position_first
+end
+
 --- Play the animation
 -- Starts it if it was stopped.
 -- Basically makes sure it uses the delays
@@ -115,13 +142,17 @@ end
 
 --- Stop the animation
 function animation:stop()
+	print("stopped animation ", self)
 	self.playing = false
+	if (self.callback) then
+		self.callback(self)
+	end
 end
 
 --- Reset
 -- Go back to the first frame.
 function animation:reset()
-	self:seek(1)
+	self:seek(self.position_first)
 end
 
 --- Seek to a frame
