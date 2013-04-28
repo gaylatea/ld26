@@ -1,7 +1,7 @@
 -- Actual game mode.
 require("lib/player")
 require("lib/level")
-require("lib/achievements")
+require("lib/achievement")
 
 gameScreen    = { level = nil }
 gameScreen_mt = { __index = gameScreen }
@@ -90,7 +90,9 @@ function gameScreen:draw()
   love.graphics.setColor(255, 255, 255)
   love.graphics.print("Path. Use the mouse to navigate.", 100, 50)
   love.graphics.print("Current Energy: " .. player.energy, 100, 65)
-  love.graphics.print(achievement_playerDies.text, 600, 65)
+  if player.energy < 90 then
+  love.graphics.print(Achievement:display(), 600, 65)
+end
   for i, v in ipairs(self.level.tiles) do
     for row, tile in ipairs(v) do tile:draw() end
   end
