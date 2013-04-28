@@ -9,6 +9,20 @@ playDeath     = false
 currentLevel  = 1
 targetTile    = nil
 
+--Achievments tests
+Achievement = {text="", earned=false, }
+
+Achievement_mt = { __index = Achievment }
+
+function Achievment:new(text, earned)
+  text = text or ""
+  earned = visible or false
+  return setmetatable( {text=text, earned=earned}, Achievment_mt)
+end
+
+achievement = {}
+table.insert(1, Achievement:new("Achievement: You passed the test", false))
+
 -- Handle processing for each of the game tiles.
 Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32,
         costValue = 1, visible = false,
@@ -91,6 +105,9 @@ function Tile:draw()
         love.graphics.draw(sun, self.x, self.y)
     end 
   end
+
+love.graphics.print(achievement.text, 0, 0)
+  
 
   --run the animation for the path the payer has traveled
   if self.visible == true and self~=player.tile
