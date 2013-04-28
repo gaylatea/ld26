@@ -41,10 +41,25 @@ function Level:new(number, startx, starty)
   local target = tiles[randomTargetRow][randomTargetColumn]
   target.costValue = 0
 
+  -- Choose a random background from the available list for this
+  -- level.
+  local bgNumber    = math.random(1, 5)
+  local background  = love.graphics.newImage("assets/spacebg"..bgNumber..".png")
+
   return setmetatable({
-    number  = number,
-    tiles   = tiles,
-    target  = target,
+    number      = number,
+    tiles       = tiles,
+    target      = target,
+    background  = background,
     start   = start,
   }, Level_mt)
+end
+
+function Level:draw()
+  -- Draw the level for this frame.
+  love.graphics.draw(self.background, 0, 0)
+
+  for i, v in ipairs(self.tiles) do
+    for row, tile in ipairs(v) do tile:draw() end
+  end
 end
