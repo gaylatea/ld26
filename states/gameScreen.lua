@@ -30,12 +30,18 @@ function gameScreen:new()
     death = love.audio.newSource("assets/explosion.wav"),
   }
 
+  local fonts = {
+    large   = love.graphics.newFont("assets/sourcesans.ttf", 32),
+    normal  = love.graphics.newFont(11),
+  }
+
   return setmetatable({
     animations  = animations,
     bg          = spaceBackground,
     level       = level,
     images      = images,
     sounds      = sounds,
+    fonts       = fonts,
   }, gameScreen_mt)
 end
 
@@ -62,11 +68,30 @@ function gameScreen:draw()
   -- Draw this screen for the current frame.
   love.graphics.draw(self.bg, 0, 0)
   love.graphics.setColor(255, 255, 255)
-  love.graphics.print("Path. Use the mouse to navigate.", 100, 50)
-  love.graphics.print("Current Energy: " .. player.energy, 100, 65)
+
+  love.graphics.setFont(game.fonts.large)
+
+  -- Try to adjust the energy readout so that it doesn't shift between
+  -- 100% and 99%.
+  energyPosX = 1100
+  if player.energy >= 100 then
+    energyPosX = energyPosX - 18
+  end
+
+  -- Show the energy in colours based off of the player status.
+  if (player.energy > 25 and player.energy <= 50) then
+    love.graphics.setColor(255, 255, 0)
+  elseif (player.energy >= 0 and player.energy <= 25) then
+    love.graphics.setColor(255, 0, 0)
+  end
+  love.graphics.print(player.energy.."%", energyPosX, 50)
+  love.graphics.setColor(255, 255, 255)
+  love.graphics.setFont(game.fonts.normal)
+
   Achievement:display()
 
   for i, v in ipairs(self.level.tiles) do
     for row, tile in ipairs(v) do tile:draw() end
   end
+  love.graphics.setFont(game.fonts.normal)
 end
