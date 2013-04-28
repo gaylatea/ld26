@@ -93,3 +93,17 @@ function gameScreen:draw()
     for row, tile in ipairs(v) do tile:draw() end
   end
 end
+
+function gameScreen:engagePotatoMode()
+  -- Swap the player's avatar for a potato floating through space.
+    local good          = love.graphics.newImage("potato100.png")
+    local okay          = love.graphics.newImage("potato75.png")
+    local bad           = love.graphics.newImage("potato50.png")
+    local dying         = love.graphics.newImage("potato25.png")
+    local death         = love.graphics.newImage("potato0.png")
+    game.animations.good    = newAnimation(good, 32, 32, 0.13, 0)
+    game.animations.okay    = newAnimation(okay, 32, 32, 0.13, 0)
+    game.animations.bad     = newAnimation(bad, 32, 32, 0.13, 0)
+    game.animations.dying   = newAnimation(dying, 32, 32, 0.13, 0)
+    game.animations.death   = newAnimation(death, 32, 32, 0.25, 0)
+end

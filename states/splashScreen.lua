@@ -13,6 +13,9 @@ end
 
 function splashScreen:click(x, y, button)
   -- Process mouse clicks on this screen.
+  if button == "r" then
+    game:engagePotatoMode()
+  end
   currentScreen = game
 end
 
