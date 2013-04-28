@@ -46,6 +46,7 @@ function Tile:draw()
   -- Draw the target tile in red so we know what's up.
   if game.level.target == self then
     self:box(255, 0, 0, 255)
+    love.graphics.draw(game.images.wormhole, self.x, self.y)
   end
 
   -- Draw the selection around an active tile.
@@ -78,12 +79,14 @@ function Tile:draw()
 
     -- Make costs shown of these suns black for readability.
     love.graphics.setColor(0, 0, 0, 255)
+  elseif game.level.start == self then
+    love.graphics.draw(game.images.wormhole_in, self.x, self.y)
   end
 
   if self:is_inside(mousex, mousey) then
     -- Use a larger font to make things clearer.
     love.graphics.setFont(game.fonts.large)
-    love.graphics.print(self.costValue, self.x+8, self.y-5)
+    love.graphics.print(self.costValue, self.x+8, self.y-6)
     love.graphics.setFont(game.fonts.normal)
   end
 
@@ -151,8 +154,9 @@ function Tile:click(x, y)
 
     -- Set up the next level if we've reached the target.
     if self == game.level.target then
-      game.level = Level:new(game.level.number + 1)
-      player.tile = game.level.tiles[self.gy+1][self.gx+1]
+      game.level  = Level:new(game.level.number + 1, (self.gx+1), (self.gy+1))
+      player.tile = game.level.start
+      player.tile.costValue = 0
     else
       player.tile = self
     end
