@@ -21,3 +21,7 @@ end
 function love.mousepressed(x, y, button)
   currentScreen:click(x, y, button)
 end
+
+function love.keypressed( key, unicode )
+   game:keyboardPressed(key) 
+end

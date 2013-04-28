@@ -64,6 +64,20 @@ function gameScreen:click(x, y, button)
   end
 end
 
+function gameScreen:keyboardPressed(button)
+  if button == "up" 
+    then
+      player.tile.y = player.tile.y - 32
+      elseif button == "down" then
+        player.tile.y = player.tile.y + 32
+        elseif button == "left" then
+          player.tile.x = player.tile.x - 32
+          elseif button == "right" then
+            player.tile.x = player.tile.x + 32
+  end 
+
+end
+
 function gameScreen:draw()
   -- Draw this screen for the current frame.
   love.graphics.draw(self.bg, 0, 0)
