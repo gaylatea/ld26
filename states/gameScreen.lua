@@ -18,7 +18,6 @@ function gameScreen:new()
 
   local animations = {
     s_path  = newAnimation(images.s_path, 32, 32, 0.13, 0),
-    t_path  = newAnimation(images.s_path, 32, 32, 0.13, 0)
   }
 
   spaceBackground = love.graphics.newImage("assets/spacebg.png")
@@ -43,6 +42,7 @@ end
 function gameScreen:update(dt)
   -- Update any animations on this screen.
   player:update(dt)
+  self.animations.s_path:update(dt)
 end
 
 function gameScreen:click(x, y, button)

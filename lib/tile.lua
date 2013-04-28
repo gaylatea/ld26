@@ -36,58 +36,44 @@ function Tile:draw()
     self:box(255, 255, 255, 255)
   end
 
-  --Check to see if the the tile is within range of the player, if so then make the cost value visible
-    if (self.x == player.tile.x and self.y == player.tile.y)
-      or (self.x == player.tile.x+32 and self.y == player.tile.y+32)
-      or (self.x == player.tile.x-32 and self.y == player.tile.y-32)
-      or (self.x == player.tile.x+32 and self.y == player.tile.y-32)
-      or (self.x == player.tile.x-32 and self.y == player.tile.y+32)
-      or (self.x == player.tile.x+32 and self.y == player.tile.y)
-      or (self.x == player.tile.x+64 and self.y == player.tile.y)
-      or (self.x == player.tile.x and self.y == player.tile.y+32)
-      or (self.x == player.tile.x and self.y == player.tile.y+64)
-      or (self.x == player.tile.x-32 and self.y == player.tile.y)
-      or (self.x == player.tile.x-64 and self.y == player.tile.y)
-      or (self.x == player.tile.x and self.y == player.tile.y-32)
-      or (self.x == player.tile.x and self.y == player.tile.y-64)
-      or self.visible == true
-    then
-      if (self.x == player.tile.x and self.y == player.tile.y-32)
-        or (self.x == player.tile.x and self.y == player.tile.y+32)
-        or (self.x == player.tile.x+32 and self.y == player.tile.y)
-        or (self.x == player.tile.x-32 and self.y == player.tile.y)
-          then
-            love.graphics.setColor(255, 255, 255)
-          else
-            love.graphics.setColor(90, 90, 90)
-      end
+  -- Determine if we should show the cost value to the player.
+  -- Also draw the cost sprite, if there is one.
+  if not self:is_visible() then return end
 
-    if self:is_inside(mousex, mousey) then
-      love.graphics.print(self.costValue, self.x+13, self.y+9)
-    end
+  -- Restore the old colour when we're done.
+  local oldr, oldg, oldb, olda = love.graphics.getColor()
 
-    love.graphics.setColor(255, 255, 255)
-
-    if  self.costValue == 3 then
-        love.graphics.draw(game.images.asteroidBelt, self.x, self.y)
-      elseif self.costValue == 4 then
-       love.graphics.draw(game.images.spaceStation, self.x, self.y)
-      elseif self.costValue == 5 then
-        love.graphics.draw(game.images.sun, self.x, self.y)
-    end
+  -- Light up legal moves and gray out illegal ones to give the
+  -- player a better hint about where it's possible to move.
+  if self:is_legal_move() then
+    love.graphics.setColor(255, 255, 255, 255)
+  else
+    love.graphics.setColor(90, 90, 90, 255)
   end
+
+  if self.costValue == 3 then
+    love.graphics.draw(game.images.asteroidBelt, self.x, self.y)
+  elseif self.costValue == 4 then
+   love.graphics.draw(game.images.spaceStation, self.x, self.y)
+  elseif self.costValue == 5 then
+    love.graphics.draw(game.images.sun, self.x, self.y)
+
+    -- Make costs shown of these suns black for readability.
+    love.graphics.setColor(0, 0, 0, 255)
+  end
+
+  if self:is_inside(mousex, mousey) then
+    love.graphics.print(self.costValue, self.x+13, self.y+9)
+  end
+
+  love.graphics.setColor(oldr, oldg, oldb, olda)
 
   --run the animation for the path the payer has traveled
-  if self.visible == true and self~=player.tile
-    then
-    if self.t_path == true
-      then
-      game.animations.t_path:draw(self.x, self.y)
-    else
+  if self.visible == true and self ~= player.tile then
     game.animations.s_path:draw(self.x, self.y)
-    end
   end
 
+  -- Do not show the tile underlying the player as it can confuse.
   if player.tile == self then
     player:draw(self.x, self.y)
   end
@@ -120,4 +106,21 @@ function Tile:is_legal_move()
     or (self.x == (player.tile.x - self.sx) and self.y == player.tile.y)
     or (self.y == (player.tile.y + self.sy) and self.x == player.tile.x)
     or (self.y == (player.tile.y - self.sy) and self.x == player.tile.x)
+end
+
+function Tile:is_visible()
+  -- Returns whether the tile should be visible at all on-screen.
+  -- Includes diagonal squares, which cannot be moved to but you
+  -- might want to see what's up.
+  return (self:is_legal_move())
+      or (player.tile == self)
+      or (self.x == player.tile.x+32 and self.y == player.tile.y+32)
+      or (self.x == player.tile.x-32 and self.y == player.tile.y-32)
+      or (self.x == player.tile.x+32 and self.y == player.tile.y-32)
+      or (self.x == player.tile.x-32 and self.y == player.tile.y+32)
+      or (self.x == player.tile.x+64 and self.y == player.tile.y)
+      or (self.x == player.tile.x and self.y == player.tile.y+64)
+      or (self.x == player.tile.x-64 and self.y == player.tile.y)
+      or (self.x == player.tile.x and self.y == player.tile.y-64)
+      or self.visible == true
 end
