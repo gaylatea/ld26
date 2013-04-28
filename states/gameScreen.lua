@@ -20,8 +20,6 @@ function gameScreen:new()
     s_path  = newAnimation(images.s_path, 32, 32, 0.13, 0),
   }
 
-  spaceBackground = love.graphics.newImage("assets/spacebg.png")
-
   local level           = Level:new(1)
   player.tile           = level.tiles[8][1]
   player.tile.costValue = 0
@@ -37,7 +35,6 @@ function gameScreen:new()
 
   return setmetatable({
     animations  = animations,
-    bg          = spaceBackground,
     level       = level,
     images      = images,
     sounds      = sounds,
@@ -66,9 +63,7 @@ end
 
 function gameScreen:draw()
   -- Draw this screen for the current frame.
-  love.graphics.draw(self.bg, 0, 0)
   love.graphics.setColor(255, 255, 255)
-
   love.graphics.setFont(game.fonts.large)
 
   -- Try to adjust the energy readout so that it doesn't shift between
@@ -89,9 +84,5 @@ function gameScreen:draw()
   love.graphics.setFont(game.fonts.normal)
 
   Achievement:display()
-
-  for i, v in ipairs(self.level.tiles) do
-    for row, tile in ipairs(v) do tile:draw() end
-  end
-  love.graphics.setFont(game.fonts.normal)
+  self.level:draw()
 end
