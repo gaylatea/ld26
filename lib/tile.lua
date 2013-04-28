@@ -46,7 +46,6 @@ function Tile:draw()
   -- Draw the target tile in red so we know what's up.
   if game.level.target == self then
     self:box(255, 0, 0, 255)
-    love.graphics.draw(game.images.wormhole, self.x, self.y)
   end
 
   -- Draw the selection around an active tile.
@@ -81,6 +80,8 @@ function Tile:draw()
     love.graphics.setColor(0, 0, 0, 255)
   elseif game.level.start == self then
     love.graphics.draw(game.images.wormhole_in, self.x, self.y)
+  elseif game.level.target == self then
+    love.graphics.draw(game.images.wormhole, self.x, self.y)
   end
 
   if self:is_inside(mousex, mousey) then
@@ -135,6 +136,8 @@ function Tile:is_visible()
   -- Includes diagonal squares, which cannot be moved to but you
   -- might want to see what's up.
   return (self:is_legal_move())
+      or (game.level.target == self)
+      or (game.level.start == self)
       or (player.tile == self)
       or (self.x == player.tile.x+32 and self.y == player.tile.y+32)
       or (self.x == player.tile.x-32 and self.y == player.tile.y-32)
