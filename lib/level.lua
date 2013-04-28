@@ -28,6 +28,8 @@ function Level:new(number)
     newEnergy = 25
   end
 
+  player.energy = newEnergy + player.energy
+
   -- Randomize where the target tile is, but try to keep it at least
   -- certain distance away from the player.
   local randomTargetRow     = math.random(15)

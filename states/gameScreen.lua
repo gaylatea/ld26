@@ -8,13 +8,17 @@ gameScreen_mt = { __index = gameScreen }
 function gameScreen:new()
   -- Load in necessary resources for this screen.
   local images = {
-    good  = love.graphics.newImage("ball1.png"),
-    okay  = love.graphics.newImage("ball75.png"),
-    bad   = love.graphics.newImage("ball50.png"),
-    dying = love.graphics.newImage("ball25.png"),
-    death = love.graphics.newImage("ball0b.png"),
-    s_path = love.graphics.newImage("ball0.png"),
-    t_path = love.graphics.newImage("ball25.png"),
+    good          = love.graphics.newImage("ball1.png"),
+    okay          = love.graphics.newImage("ball75.png"),
+    bad           = love.graphics.newImage("ball50.png"),
+    dying         = love.graphics.newImage("ball25.png"),
+    death         = love.graphics.newImage("ball0b.png"),
+    s_path        = love.graphics.newImage("ball0.png"),
+    t_path        = love.graphics.newImage("ball25.png"),
+    asteroidBelt  = love.graphics.newImage("asteroid belt.png"),
+    spaceStation  = love.graphics.newImage("space station.png"),
+    sun           = love.graphics.newImage("sun.png"),
+
   }
 
   local animations = {
@@ -36,6 +40,7 @@ function gameScreen:new()
     animations  = animations,
     bg          = spaceBackground,
     level       = level,
+    images      = images,
   }, gameScreen_mt)
 end
 

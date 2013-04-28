@@ -41,35 +41,44 @@ function Tile:draw()
     love.graphics.setColor(oldr, oldg, oldb, olda)
   end
 
-  if self:is_inside(mousex, mousey)
-    then
   --Check to see if the the tile is within range of the player, if so then make the cost value visible
     if (self.x == player.tile.x and self.y == player.tile.y)
-    or (self.x == player.tile.x+32 and self.y == player.tile.y+32)
-    or (self.x == player.tile.x-32 and self.y == player.tile.y-32)
-    or (self.x == player.tile.x+32 and self.y == player.tile.y-32)
-    or (self.x == player.tile.x-32 and self.y == player.tile.y+32)
-    or (self.x == player.tile.x+32 and self.y == player.tile.y)
-    or (self.x == player.tile.x+64 and self.y == player.tile.y)
-    or (self.x == player.tile.x and self.y == player.tile.y+32)
-    or (self.x == player.tile.x and self.y == player.tile.y+64)
-    or (self.x == player.tile.x-32 and self.y == player.tile.y)
-    or (self.x == player.tile.x-64 and self.y == player.tile.y)
-    or (self.x == player.tile.x and self.y == player.tile.y-32)
-    or (self.x == player.tile.x and self.y == player.tile.y-64)
-    or self.visible == true
-  then
-    if (self.x == player.tile.x and self.y == player.tile.y-32)
-      or (self.x == player.tile.x and self.y == player.tile.y+32)
+      or (self.x == player.tile.x+32 and self.y == player.tile.y+32)
+      or (self.x == player.tile.x-32 and self.y == player.tile.y-32)
+      or (self.x == player.tile.x+32 and self.y == player.tile.y-32)
+      or (self.x == player.tile.x-32 and self.y == player.tile.y+32)
       or (self.x == player.tile.x+32 and self.y == player.tile.y)
+      or (self.x == player.tile.x+64 and self.y == player.tile.y)
+      or (self.x == player.tile.x and self.y == player.tile.y+32)
+      or (self.x == player.tile.x and self.y == player.tile.y+64)
       or (self.x == player.tile.x-32 and self.y == player.tile.y)
-      then
-        love.graphics.setColor(255, 255, 255)
-      else
-        love.graphics.setColor(self.red, self.blue, self.green)
+      or (self.x == player.tile.x-64 and self.y == player.tile.y)
+      or (self.x == player.tile.x and self.y == player.tile.y-32)
+      or (self.x == player.tile.x and self.y == player.tile.y-64)
+      or self.visible == true
+    then
+      if (self.x == player.tile.x and self.y == player.tile.y-32)
+        or (self.x == player.tile.x and self.y == player.tile.y+32)
+        or (self.x == player.tile.x+32 and self.y == player.tile.y)
+        or (self.x == player.tile.x-32 and self.y == player.tile.y)
+          then
+            love.graphics.setColor(255, 255, 255)
+          else
+            love.graphics.setColor(self.red, self.blue, self.green)
       end
-    love.graphics.print(self.costValue, self.x+13, self.y+9)
+
+    if self:is_inside(mousex, mousey) then
+      love.graphics.print(self.costValue, self.x+13, self.y+9)
+    end
+
     love.graphics.setColor(255, 255, 255)
+
+    if  self.costValue == 3 then
+        love.graphics.draw(game.images.asteroidBelt, self.x, self.y)
+      elseif self.costValue == 4 then
+       love.graphics.draw(game.images.spaceStation, self.x, self.y)
+      elseif self.costValue == 5 then
+        love.graphics.draw(game.images.sun, self.x, self.y)
     end
   end
 
@@ -87,7 +96,6 @@ function Tile:draw()
   if player.tile == self then
     player:draw(self.x, self.y)
   end
-
 end
 
 function Tile:is_inside(x, y)
@@ -97,6 +105,7 @@ end
 
 function Tile:is_legal_move()
   -- Does not allow diagonal motion. Might want to change that soon.
+  -- Also does not allow backwards motion. (west)
   if self.x == (player.tile.x + 32) and self.y == player.tile.y then
     return true
   end

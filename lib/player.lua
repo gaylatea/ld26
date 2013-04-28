@@ -1,5 +1,5 @@
 -- Player state during the game.
-Player    = { tile = nil, energy = 100, animation = nil }
+Player    = { tile = nil, energy = 0, animation = nil }
 Player_mt = { __index = Player }
 
 function Player:new()
