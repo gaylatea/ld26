@@ -7,8 +7,6 @@ playDeath     = false
 
 function love.load()
   -- Create some sample tiles to mess around with.
-  player          = Player:new()
-  game            = gameScreen:new()
   currentScreen   = splashScreen:new()
 end
 

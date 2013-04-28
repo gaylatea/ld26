@@ -16,11 +16,15 @@ end
 
 function splashScreen:click(x, y, button)
   -- Process mouse clicks on this screen.
+  love.audio.play(self.sounds.start)
+
   if button == "r" then
-    game:engagePotatoMode()
+    player = Player:new(true)
+  else
+    player = Player:new()
   end
 
-  love.audio.play(self.sounds.start)
+  game          = gameScreen:new()
   currentScreen = game
 end
 

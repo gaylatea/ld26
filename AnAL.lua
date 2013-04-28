@@ -142,7 +142,6 @@ end
 
 --- Stop the animation
 function animation:stop()
-	print("stopped animation ", self)
 	self.playing = false
 	if (self.callback) then
 		self.callback(self)
