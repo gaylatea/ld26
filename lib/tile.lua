@@ -154,13 +154,14 @@ function Tile:click(x, y)
       game.level = Level:new(game.level.number + 1)
       player.tile = game.level.tiles[self.gy+1][self.gx+1]
     else
-      -- Do the normal cost accounting for the move.
       player.tile = self
-      if player.tile.costValue >= player.energy then
-        player:updateEnergy(0)
-      else
-        player:updateEnergy(player.energy - player.tile.costValue)
-      end
+    end
+
+    -- Do the normal cost accounting for the move.
+    if player.tile.costValue >= player.energy then
+      player:updateEnergy(0)
+    else
+      player:updateEnergy(player.energy - player.tile.costValue)
     end
     return true
   end
