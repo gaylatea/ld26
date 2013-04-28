@@ -43,7 +43,7 @@ function Level:new(number, startx, starty)
 
   -- Choose a random background from the available list for this
   -- level.
-  local bgNumber    = math.random(1, 2)
+  local bgNumber    = math.random(1, 5)
   local background  = love.graphics.newImage("assets/spacebg"..bgNumber..".png")
 
   return setmetatable({
