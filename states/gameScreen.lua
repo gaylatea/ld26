@@ -8,16 +8,16 @@ gameScreen_mt = { __index = gameScreen }
 function gameScreen:new()
   -- Load in necessary resources for this screen.
   local images = {
-    good          = love.graphics.newImage("ball1.png"),
-    okay          = love.graphics.newImage("ball75.png"),
-    bad           = love.graphics.newImage("ball50.png"),
-    dying         = love.graphics.newImage("ball25.png"),
-    death         = love.graphics.newImage("ball0b.png"),
-    s_path        = love.graphics.newImage("ball0.png"),
-    t_path        = love.graphics.newImage("ball25.png"),
-    asteroidBelt  = love.graphics.newImage("asteroid belt.png"),
-    spaceStation  = love.graphics.newImage("space station.png"),
-    sun           = love.graphics.newImage("sun.png"),
+    good          = love.graphics.newImage("assets/ball1.png"),
+    okay          = love.graphics.newImage("assets/ball75.png"),
+    bad           = love.graphics.newImage("assets/ball50.png"),
+    dying         = love.graphics.newImage("assets/ball25.png"),
+    death         = love.graphics.newImage("assets/ball0b.png"),
+    s_path        = love.graphics.newImage("assets/ball0.png"),
+    t_path        = love.graphics.newImage("assets/ball25.png"),
+    asteroidBelt  = love.graphics.newImage("assets/asteroid belt.png"),
+    spaceStation  = love.graphics.newImage("assets/space station.png"),
+    sun           = love.graphics.newImage("assets/sun.png"),
 
   }
 
@@ -31,7 +31,7 @@ function gameScreen:new()
     t_path  = newAnimation(images.s_path, 32, 32, 0.13, 0)
   }
 
-  spaceBackground = love.graphics.newImage("spacebg.png")
+  spaceBackground = love.graphics.newImage("assets/spacebg.png")
 
   local level           = Level:new(1)
   player.tile           = level.tiles[8][1]
@@ -96,11 +96,11 @@ end
 
 function gameScreen:engagePotatoMode()
   -- Swap the player's avatar for a potato floating through space.
-    local good          = love.graphics.newImage("potato100.png")
-    local okay          = love.graphics.newImage("potato75.png")
-    local bad           = love.graphics.newImage("potato50.png")
-    local dying         = love.graphics.newImage("potato25.png")
-    local death         = love.graphics.newImage("potato0.png")
+    local good          = love.graphics.newImage("assets/potato100.png")
+    local okay          = love.graphics.newImage("assets/potato75.png")
+    local bad           = love.graphics.newImage("assets/potato50.png")
+    local dying         = love.graphics.newImage("assets/potato25.png")
+    local death         = love.graphics.newImage("assets/potato0.png")
     game.animations.good    = newAnimation(good, 32, 32, 0.13, 0)
     game.animations.okay    = newAnimation(okay, 32, 32, 0.13, 0)
     game.animations.bad     = newAnimation(bad, 32, 32, 0.13, 0)
