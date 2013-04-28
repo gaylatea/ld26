@@ -3,8 +3,6 @@ require("AnAL")
 require("states/splashScreen")
 require("states/gameScreen")
 
-playDeath     = false
-
 function love.load()
   -- Create some sample tiles to mess around with.
   currentScreen   = splashScreen:new()
