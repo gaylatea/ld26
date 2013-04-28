@@ -2,15 +2,27 @@
 -- Handle processing for each of the game tiles.
 Tile = {x = 0, y = 0, cost = 1, sx = 32, sy = 32,
         costValue = 1, visible = false,
-        red=90, green=90, blue=90}
+        red=90, green=90, blue=90, levelNumber = 0}
 Tile_mt = { __index = Tile }
-function Tile:new(x, y, gx, gy)
-  costValue = math.random(5)
+function Tile:new(x, y, gx, gy, levelNumber)
+  levelNumber = levelNumber or 0
+  costTemp = math.random(101)
+  if costTemp == 1 and costTemp < (40-(levelNumber * 5)) then
+    costValue = 1
+  elseif costTemp > (41-(levelNumber * 5)) and costTemp < (65-(levelNumber * 5)) then
+    costValue = 2
+  elseif costTemp > (66-(levelNumber * 5)) and costTemp < (85-(levelNumber * 5)) then
+    costValue = 3
+  elseif costTemp > (86-(levelNumber * 5)) and costTemp < (95-(levelNumber * 5)) then
+    costValue = 4
+  elseif costTemp > (96-(levelNumber * 5))  and costTemp == 101 then
+    costValue = 5
+  end
   visible = visible or false
   red = red or 90
   green = green or 90
   blue = blue or 90
-  return setmetatable( {x=x, y=y, gx=gx, gy=gy, costValue=costValue, visible=visible, red=red, green=green, blue=blue}, Tile_mt)
+  return setmetatable( {x=x, y=y, gx=gx, gy=gy, costValue=costValue, visible=visible, red=red, green=green, blue=blue, levelNumber=levelNumber}, Tile_mt)
 end
 
 
