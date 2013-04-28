@@ -2,6 +2,7 @@
 require("AnAL")
 require("states/splashScreen")
 require("states/gameScreen")
+require("states/gameOverScreen")
 
 function love.load()
   -- Create some sample tiles to mess around with.

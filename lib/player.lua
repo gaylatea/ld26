@@ -83,11 +83,5 @@ function Player.gameOver()
   -- Called when the death animation is finished playing.
   -- Will reset the game (for now).
   -- Will eventually transition to Game Over screen.
-  player.animations.death:reset()
-  player.animations.death:play()
-  game.level = Level:new(1)
-
-  player:updateEnergy(100)
-  player.tile           = game.level.tiles[8][1]
-  player.tile.costValue = 0
+  currentScreen = gameOverScreen:new()
 end
