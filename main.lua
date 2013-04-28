@@ -51,36 +51,45 @@ function Tile:draw()
     love.graphics.setColor(oldr, oldg, oldb, olda)
   end
 
-  if self:is_inside(mousex, mousey)
-    then
   --Check to see if the the tile is within range of the player, if so then make the cost value visible
     if (self.x == player.tile.x and self.y == player.tile.y)
-    or (self.x == player.tile.x+32 and self.y == player.tile.y+32)
-    or (self.x == player.tile.x-32 and self.y == player.tile.y-32)
-    or (self.x == player.tile.x+32 and self.y == player.tile.y-32)
-    or (self.x == player.tile.x-32 and self.y == player.tile.y+32)
-    or (self.x == player.tile.x+32 and self.y == player.tile.y)
-    or (self.x == player.tile.x+64 and self.y == player.tile.y)
-    or (self.x == player.tile.x and self.y == player.tile.y+32)
-    or (self.x == player.tile.x and self.y == player.tile.y+64)
-    or (self.x == player.tile.x-32 and self.y == player.tile.y)
-    or (self.x == player.tile.x-64 and self.y == player.tile.y)
-    or (self.x == player.tile.x and self.y == player.tile.y-32)
-    or (self.x == player.tile.x and self.y == player.tile.y-64)
-    or self.visible == true
-  then
-    if (self.x == player.tile.x and self.y == player.tile.y-32)
-      or (self.x == player.tile.x and self.y == player.tile.y+32)
+      or (self.x == player.tile.x+32 and self.y == player.tile.y+32)
+      or (self.x == player.tile.x-32 and self.y == player.tile.y-32)
+      or (self.x == player.tile.x+32 and self.y == player.tile.y-32)
+      or (self.x == player.tile.x-32 and self.y == player.tile.y+32)
       or (self.x == player.tile.x+32 and self.y == player.tile.y)
+      or (self.x == player.tile.x+64 and self.y == player.tile.y)
+      or (self.x == player.tile.x and self.y == player.tile.y+32)
+      or (self.x == player.tile.x and self.y == player.tile.y+64)
       or (self.x == player.tile.x-32 and self.y == player.tile.y)
-      then
-        love.graphics.setColor(255, 255, 255)
-      else
-        love.graphics.setColor(self.red, self.blue, self.green)
+      or (self.x == player.tile.x-64 and self.y == player.tile.y)
+      or (self.x == player.tile.x and self.y == player.tile.y-32)
+      or (self.x == player.tile.x and self.y == player.tile.y-64)
+      or self.visible == true
+    then
+      if (self.x == player.tile.x and self.y == player.tile.y-32)
+        or (self.x == player.tile.x and self.y == player.tile.y+32)
+        or (self.x == player.tile.x+32 and self.y == player.tile.y)
+        or (self.x == player.tile.x-32 and self.y == player.tile.y)
+          then
+            love.graphics.setColor(255, 255, 255)
+          else
+            love.graphics.setColor(self.red, self.blue, self.green)
       end
-    love.graphics.print(self.costValue, self.x+13, self.y+9)
-    love.graphics.setColor(255, 255, 255)
+
+    if self:is_inside(mousex, mousey) then
+      love.graphics.print(self.costValue, self.x+13, self.y+9)
     end
+
+    love.graphics.setColor(255, 255, 255)
+
+    if  self.costValue == 3 then
+        love.graphics.draw(asteriodBelt, self.x, self.y)
+      elseif self.costValue == 4 then
+       love.graphics.draw(spaceStation, self.x, self.y)
+      elseif self.costValue == 5 then
+        love.graphics.draw(sun, self.x, self.y)
+    end 
   end
 
   --run the animation for the path the payer has traveled
@@ -113,7 +122,6 @@ function Tile:draw()
       end
     end
   end
-
 end
 
 function Tile:is_inside(x, y)
@@ -198,6 +206,10 @@ function love.load()
     s_path = newAnimation(images.s_path, 32, 32, 0.13, 0),
     t_path = newAnimation(images.s_path, 32, 32, 0.13, 0)
   }
+
+  asteriodBelt = love.graphics.newImage("asteroid belt.png")
+  spaceStation = love.graphics.newImage("space station.png")
+  sun = love.graphics.newImage("sun.png")
 
   spaceBackground = love.graphics.newImage("spacebg.png")
 
