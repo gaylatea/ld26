@@ -14,14 +14,16 @@ function gameScreen:new()
     asteroidBelt  = love.graphics.newImage("assets/asteroid belt.png"),
     spaceStation  = love.graphics.newImage("assets/space station.png"),
     sun           = love.graphics.newImage("assets/sun.png"),
+    wormhole      = love.graphics.newImage("assets/wormhole out.png"),
+    wormhole_in   = love.graphics.newImage("assets/wormhole in.png"),
   }
 
   local animations = {
     s_path  = newAnimation(images.s_path, 32, 32, 0.13, 0),
   }
 
-  local level           = Level:new(1)
-  player.tile           = level.tiles[8][1]
+  local level           = Level:new(1, 8, 1)
+  player.tile           = level.start
   player.tile.costValue = 0
 
   local sounds = {
@@ -63,6 +65,8 @@ end
 
 function gameScreen:draw()
   -- Draw this screen for the current frame.
+  self.level:draw()
+
   love.graphics.setColor(255, 255, 255)
   love.graphics.setFont(game.fonts.large)
 
@@ -84,5 +88,4 @@ function gameScreen:draw()
   love.graphics.setFont(game.fonts.normal)
 
   Achievement:display()
-  self.level:draw()
 end
