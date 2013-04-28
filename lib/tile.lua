@@ -78,12 +78,16 @@ function Tile:draw()
 
     -- Make costs shown of these suns black for readability.
     love.graphics.setColor(0, 0, 0, 255)
+  elseif game.level.start == self then
+    love.graphics.draw(game.images.wormhole_in, self.x, self.y)
+  elseif game.level.target == self then
+    love.graphics.draw(game.images.wormhole, self.x, self.y)
   end
 
   if self:is_inside(mousex, mousey) then
     -- Use a larger font to make things clearer.
     love.graphics.setFont(game.fonts.large)
-    love.graphics.print(self.costValue, self.x+8, self.y-5)
+    love.graphics.print(self.costValue, self.x+8, self.y-6)
     love.graphics.setFont(game.fonts.normal)
   end
 
@@ -132,6 +136,8 @@ function Tile:is_visible()
   -- Includes diagonal squares, which cannot be moved to but you
   -- might want to see what's up.
   return (self:is_legal_move())
+      or (game.level.target == self)
+      or (game.level.start == self)
       or (player.tile == self)
       or (self.x == player.tile.x+32 and self.y == player.tile.y+32)
       or (self.x == player.tile.x-32 and self.y == player.tile.y-32)
@@ -151,8 +157,9 @@ function Tile:click(x, y)
 
     -- Set up the next level if we've reached the target.
     if self == game.level.target then
-      game.level = Level:new(game.level.number + 1)
-      player.tile = game.level.tiles[self.gy+1][self.gx+1]
+      game.level  = Level:new(game.level.number + 1, (self.gx+1), (self.gy+1))
+      player.tile = game.level.start
+      player.tile.costValue = 0
     else
       player.tile = self
     end

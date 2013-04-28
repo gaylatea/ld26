@@ -14,6 +14,8 @@ function gameScreen:new()
     asteroidBelt  = love.graphics.newImage("assets/asteroid belt.png"),
     spaceStation  = love.graphics.newImage("assets/space station.png"),
     sun           = love.graphics.newImage("assets/sun.png"),
+    wormhole      = love.graphics.newImage("assets/wormhole out.png"),
+    wormhole_in   = love.graphics.newImage("assets/wormhole in.png"),
   }
 
   local animations = {
@@ -22,8 +24,8 @@ function gameScreen:new()
 
   spaceBackground = love.graphics.newImage("assets/spacebg.png")
 
-  local level           = Level:new(1)
-  player.tile           = level.tiles[8][1]
+  local level           = Level:new(1, 8, 1)
+  player.tile           = level.start
   player.tile.costValue = 0
 
   local sounds = {
