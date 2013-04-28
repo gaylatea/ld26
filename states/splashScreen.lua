@@ -13,8 +13,10 @@ end
 
 function splashScreen:click(x, y, button)
   -- Process mouse clicks on this screen.
+  currentScreen = game
 end
 
 function splashScreen:draw()
   -- Draw this screen for the current frame.
+  love.graphics.print("Click the mouse to start", 550, 350)
 end

@@ -33,8 +33,9 @@ function gameScreen:new()
 
   spaceBackground = love.graphics.newImage("spacebg.png")
 
-  local level     = Level:new(1)
-  player.tile     = level.tiles[8][1]
+  local level           = Level:new(1)
+  player.tile           = level.tiles[8][1]
+  player.tile.costValue = 0
 
   return setmetatable({
     animations  = animations,
