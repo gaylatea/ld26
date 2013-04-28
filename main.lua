@@ -25,3 +25,17 @@ end
 function love.mousepressed(x, y, button)
   currentScreen:click(x, y, button)
 end
+
+function love.keypressed( key, unicode )
+   if key == "up" then
+      love.graphics.print("keypressed", 800, 65)
+   end
+   --currentScreen:keyboardPressed(key)
+end
+
+function love.keyreleased( key, unicode )
+	if key == "up" then
+	  love.graphics.print("keyreleased", 800, 65)
+	end
+	currentScreen:keyboardPressed(key)
+end
