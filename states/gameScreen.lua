@@ -50,17 +50,7 @@ function gameScreen:click(x, y, button)
   if button == "l" then
     for row, v in ipairs(game.level.tiles) do
       for column, tile in ipairs(v) do
-        if tile:is_inside(x, y) and tile:is_legal_move() then
-          if tile == game.level.target then
-            game.level = Level:new(game.level.number + 1)
-          end
-          player.tile.visible = true
-          player.tile = game.level.tiles[row][column]
-          if player.tile.costValue >= player.energy then
-            player:updateEnergy(0)
-          else
-            player:updateEnergy(player.energy - player.tile.costValue)
-          end
+        if tile:click(x, y) then
           break
         end
       end
@@ -75,9 +65,7 @@ function gameScreen:draw()
   love.graphics.print("Path. Use the mouse to navigate.", 100, 50)
   love.graphics.print("Current Energy: " .. player.energy, 100, 65)
   Achievement:display()
-  --if player.energy < 90 then
- -- love.graphics.print(, 600, 65)
---end
+
   for i, v in ipairs(self.level.tiles) do
     for row, tile in ipairs(v) do tile:draw() end
   end
