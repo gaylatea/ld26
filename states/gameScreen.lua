@@ -76,10 +76,17 @@ function gameScreen:keyboardPressed(button)
             xShift = player.tile.x + 32
   end 
 
-  if button == "up" or "down" or "right" or "left"
-    then
-          tile:keyPress(xShift, yShift)
-        end
+  --if button == "up" or "down" or "right" or "left"
+  --  then
+  --      for row, v in ipairs(game.level.tiles) do
+  --        for column, tile in ipairs(v) do
+  --          if tile:keyPress(xShift, yShift) then
+  --          break
+   --         end
+   --       end
+   --     end
+  --end
+
 end
 
 function gameScreen:draw()

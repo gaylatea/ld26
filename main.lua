@@ -24,5 +24,5 @@ function love.mousepressed(x, y, button)
 end
 
 function love.keypressed( key, unicode )
-   game:keyboardPressed(key) 
+   gameScreen:keyboardPressed( key ) 
 end

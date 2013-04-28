@@ -168,7 +168,7 @@ function Tile:click(x, y)
 end
 
 function Tile:keyPress(x, y)
-    if self:is_legal_move() then
+  if self:is_legal_move() then
     player.tile.visible = true
 
     -- Set up the next level if we've reached the target.
