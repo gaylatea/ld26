@@ -8,11 +8,26 @@ Tile = {
   sy        = 32,
   costValue = 1,
   visible   = false,
+  level     = 0,
 }
 Tile_mt = { __index = Tile }
 
-function Tile:new(x, y, gx, gy)
-  costValue   = math.random(5)
+function Tile:new(x, y, gx, gy, level)
+  -- Create a new tile and determine what cost it should have.
+  level = level or 0
+  local costTemp = math.random(101)
+  if costTemp == 1 and costTemp < (40-(level * 5)) then
+    costValue = 1
+  elseif costTemp > (41-(level * 5)) and costTemp < (65-(level * 5)) then
+    costValue = 2
+  elseif costTemp > (66-(level * 5)) and costTemp < (85-(level * 5)) then
+    costValue = 3
+  elseif costTemp > (86-(level * 5)) and costTemp < (95-(level * 5)) then
+    costValue = 4
+  elseif costTemp > (96-(level * 5))  and costTemp == 101 then
+    costValue = 5
+  end
+
   return setmetatable({
     x         = x,
     y         = y,
@@ -20,6 +35,7 @@ function Tile:new(x, y, gx, gy)
     gy        = gy,
     costValue = costValue,
     visible   = visible,
+    level     = level,
   }, Tile_mt)
 end
 
@@ -68,17 +84,13 @@ function Tile:draw()
 
   love.graphics.setColor(oldr, oldg, oldb, olda)
 
-  --run the animation for the path the payer has traveled
-  if self ~= player.tile then
+  -- Show tiles that the player has passed through.
+  if self.visible == true and self~=player.tile then
     game.animations.s_path:draw(self.x, self.y)
   end
 
   -- Do not show the tile underlying the player as it can confuse.
-  if player.tile == self then
-    player:draw(self.x, self.y)
-  else
-    game.animations.s_path:draw(self.x, self.y)
-  end
+  if player.tile == self then player:draw(self.x, self.y) end
 end
 
 function Tile:box(r, g, b, a)
