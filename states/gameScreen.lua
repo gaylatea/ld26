@@ -71,6 +71,8 @@ function gameScreen:draw()
 
   love.graphics.setFont(game.fonts.large)
 
+  -- Try to adjust the energy readout so that it doesn't shift between
+  -- 100% and 99%.
   energyPosX = 1100
   if player.energy >= 100 then
     energyPosX = energyPosX - 18
@@ -88,7 +90,9 @@ function gameScreen:draw()
 
   Achievement:display()
 
+  love.graphics.setFont(game.fonts.large)
   for i, v in ipairs(self.level.tiles) do
     for row, tile in ipairs(v) do tile:draw() end
   end
+  love.graphics.setFont(game.fonts.normal)
 end
