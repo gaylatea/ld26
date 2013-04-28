@@ -67,15 +67,19 @@ end
 function gameScreen:keyboardPressed(button)
   if button == "up" 
     then
-      player.tile.y = player.tile.y - 32
+      yShift = player.tile.y - 32
       elseif button == "down" then
-        player.tile.y = player.tile.y + 32
+        yShift = player.tile.y + 32
         elseif button == "left" then
-          player.tile.x = player.tile.x - 32
+          xShift = player.tile.x - 32
           elseif button == "right" then
-            player.tile.x = player.tile.x + 32
+            xShift = player.tile.x + 32
   end 
 
+  if button == "up" or "down" or "right" or "left"
+    then
+          tile:keyPress(xShift, yShift)
+        end
 end
 
 function gameScreen:draw()

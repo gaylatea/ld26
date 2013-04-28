@@ -166,3 +166,25 @@ function Tile:click(x, y)
     return true
   end
 end
+
+function Tile:keyPress(x, y)
+    if self:is_legal_move() then
+    player.tile.visible = true
+
+    -- Set up the next level if we've reached the target.
+    if self == game.level.target then
+      game.level = Level:new(game.level.number + 1)
+      player.tile = game.level.tiles[self.gy+1][self.gx+1]
+    else
+      player.tile = self
+    end
+
+    -- Do the normal cost accounting for the move.
+    if player.tile.costValue >= player.energy then
+      player:updateEnergy(0)
+    else
+      player:updateEnergy(player.energy - player.tile.costValue)
+    end
+    return true
+  end
+end
