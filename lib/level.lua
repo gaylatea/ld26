@@ -4,7 +4,7 @@ require("lib/tile")
 Level    = {}
 Level_mt = { __index = Level }
 
-function Level:new(number)
+function Level:new(number, startx, starty)
   -- Load in necessary resources for the screen.
   local row = 0
   local tiles = {}
@@ -20,6 +20,9 @@ function Level:new(number)
     table.insert(tiles, rowtable)
     row = row + 1
   until row == 15
+
+  -- Record the starting tile so we can put a wormhole there.
+  local start = tiles[starty][startx]
 
   -- Give the player less energy per level, so they have to try and
   -- conserve their resources.
@@ -42,5 +45,6 @@ function Level:new(number)
     number  = number,
     tiles   = tiles,
     target  = target,
+    start   = start,
   }, Level_mt)
 end
