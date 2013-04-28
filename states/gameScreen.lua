@@ -9,8 +9,11 @@ gameScreen_mt = { __index = gameScreen }
 function gameScreen:new()
   -- Load in necessary resources for this screen.
   local images = {
-    s_path        = love.graphics.newImage("assets/ball0.png"),
-    t_path        = love.graphics.newImage("assets/ball25.png"),
+    s_path        = love.graphics.newImage("assets/trail H.png"),
+    ur_path        = love.graphics.newImage("assets/trail UR.png"),
+    ul_path        = love.graphics.newImage("assets/trail UL.png"),
+    dr_path        = love.graphics.newImage("assets/trail DR.png"),
+    dl_path        = love.graphics.newImage("assets/trail DL.png"),
     asteroidBelt  = love.graphics.newImage("assets/asteroid belt.png"),
     spaceStation  = love.graphics.newImage("assets/space station.png"),
     sun           = love.graphics.newImage("assets/sun.png"),
