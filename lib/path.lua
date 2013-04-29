@@ -10,9 +10,11 @@ function Path:new(tile)
 	return setmetatable({tile=tile, animation=animation}, Achievement_mt)
 end
 
---function Path:draw(tile)  	
-	
---end
+function Path:draw(tile) 
+	if path.tile = tile then
+		return path.animation
+	end
+end
 
 --function Path:determineAnimation(tile)
 	--for i, v in ipairs(Path) do

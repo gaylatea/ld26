@@ -10,7 +10,6 @@ Tile = {
   costValue = 1,
   visible   = false,
   level     = 0,
-  pathAnimation = nil
 }
 Tile_mt = { __index = Tile }
 
@@ -38,7 +37,6 @@ function Tile:new(x, y, gx, gy, level)
     costValue = costValue,
     visible   = visible,
     level     = level,
-    pathAnimation = pathAnimation
   }, Tile_mt)
 end
 
@@ -101,7 +99,7 @@ function Tile:draw()
       --love.graphics.print("Hi", self.x, self.y)
 
     --pathAnimation = path.tile.pathAnimation
-    love.graphics.draw(path.tile.pathAnimation, self.x, self.y)
+    love.graphics.draw(Path:draw(self), self.x, self.y)
     
   end
 
