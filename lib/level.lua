@@ -38,7 +38,7 @@ function Level:new(number, startx, starty)
 
   -- Give the player less energy per level, so they have to try and
   -- conserve their resources.
-  newEnergy = (100 - ((number - 1) * 25))
+  newEnergy = (75 - ((number - 1) * 25))
   if newEnergy < 25 then
     newEnergy = 25
   end
