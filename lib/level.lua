@@ -21,6 +21,18 @@ function Level:new(number, startx, starty)
     row = row + 1
   until row == 15
 
+  -- Figure out a small text to display for each level.
+  local text = ""
+  if number == 1 then
+    text = "Watch your energy, you need it to find that wormhole.  Click an adjacent tile to move."
+  elseif number == 2 then
+    text = "Would you look at that! New area. Rougher though."
+  elseif number == 3 then
+    text = "So. No destination? That’s alright. There’s some pretty nebulas."
+  elseif number == 4 then
+    text = "Oh. More space. Great."
+  end
+
   -- Record the starting tile so we can put a wormhole there.
   local start = tiles[starty][startx]
 
@@ -51,7 +63,8 @@ function Level:new(number, startx, starty)
     tiles       = tiles,
     target      = target,
     background  = background,
-    start   = start,
+    start       = start,
+    text        = text,
   }, Level_mt)
 end
 

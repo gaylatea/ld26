@@ -10,9 +10,12 @@ function gameOverScreen:new()
 
   local displayTime = love.timer.getTime()
 
+  local background = love.graphics.newImage("assets/gameover.png")
+
   return setmetatable({
     fonts       = fonts,
     displayTime = displayTime,
+    background  = background,
   }, gameOverScreen_mt)
 end
 
@@ -30,6 +33,5 @@ end
 
 function gameOverScreen:draw()
   -- Draw this screen for the current frame.
-  love.graphics.setFont(self.fonts.large)
-  love.graphics.print("Game Over!", 550, 350)
+  love.graphics.draw(self.background, 0, 0)
 end

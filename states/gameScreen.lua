@@ -87,5 +87,5 @@ function gameScreen:draw()
   love.graphics.setColor(255, 255, 255)
   love.graphics.setFont(game.fonts.normal)
 
-  Achievement:display()
+  love.graphics.print(game.level.text, 100, 65)
 end
