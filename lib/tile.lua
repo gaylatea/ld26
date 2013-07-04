@@ -16,16 +16,14 @@ function Tile:new(x, y, gx, gy, level)
   -- Create a new tile and determine what cost it should have.
   level = level or 0
   local costTemp = math.random(101)
-  if costTemp == 1 and costTemp < (40-(level * 5)) then
+  if costTemp < (45-(level * 5)) then
     costValue = 1
-  elseif costTemp > (41-(level * 5)) and costTemp < (65-(level * 5)) then
-    costValue = 2
-  elseif costTemp > (66-(level * 5)) and costTemp < (85-(level * 5)) then
-    costValue = 3
+  elseif costTemp > (46-(level * 5)) and costTemp < (85-(level * 5)) then
+    costValue = 7
   elseif costTemp > (86-(level * 5)) and costTemp < (95-(level * 5)) then
-    costValue = 4
+    costValue = 10
   elseif costTemp > (96-(level * 5))  and costTemp == 101 then
-    costValue = 5
+    costValue = 20
   end
 
   return setmetatable({
@@ -69,12 +67,15 @@ function Tile:draw()
     love.graphics.setColor(90, 90, 90, 255)
   end
 
-  if self.costValue == 3 then
+  xPos = self.x+8
+  if self.costValue == 7 then
     love.graphics.draw(game.images.asteroidBelt, self.x, self.y)
-  elseif self.costValue == 4 then
+  elseif self.costValue == 10 then
    love.graphics.draw(game.images.spaceStation, self.x, self.y)
-  elseif self.costValue == 5 then
+   xPos = self.x-2
+  elseif self.costValue == 20 then
     love.graphics.draw(game.images.sun, self.x, self.y)
+    xPos = self.x-2
 
     -- Make costs shown of these suns black for readability.
     love.graphics.setColor(0, 0, 0, 255)
@@ -84,10 +85,10 @@ function Tile:draw()
     love.graphics.draw(game.images.wormhole_in, self.x, self.y)
   end
 
-  if self:is_inside(mousex, mousey) then
+  if self:is_inside(mousex, mousey) and self:is_legal_move() then
     -- Use a larger font to make things clearer.
     love.graphics.setFont(game.fonts.large)
-    love.graphics.print(self.costValue, self.x+8, self.y-6)
+    love.graphics.print(self.costValue, xPos, self.y-6)
     love.graphics.setFont(game.fonts.normal)
   end
 
